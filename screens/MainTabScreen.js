@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -15,9 +15,12 @@ import EditProfileScreen from './edit-profile-screen/EditProfileScreen';
 
 import {useTheme, Avatar} from 'react-native-paper';
 import {View} from 'react-native-animatable';
+
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CardListScreen from './card-list-screen/CardListScreen';
 import CardItemDetails from './card-item-details/CardItemDetails';
+import FastFoodScreen from './fast-food-screen/FastFoodScreen';
+import FoodItemDetails from './food-item-details/FoodItemDetail'
 
 const HomeStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
@@ -25,54 +28,56 @@ const ProfileStack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
-const MainTabScreen = () => (
-  <Tab.Navigator initialRouteName="Home" activeColor="#fff">
-    <Tab.Screen
-      name="Home"
-      component={HomeStackScreen}
-      options={{
-        tabBarLabel: 'Home',
-        tabBarColor: '#FF6347',
-        tabBarIcon: ({color}) => (
-          <Icon name="ios-home" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Notifications"
-      component={NotificationStackScreen}
-      options={{
-        tabBarLabel: 'Updates',
-        tabBarColor: '#1f65ff',
-        tabBarIcon: ({color}) => (
-          <Icon name="ios-notifications" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileStackScreen}
-      options={{
-        tabBarLabel: 'Profile',
-        tabBarColor: '#694fad',
-        tabBarIcon: ({color}) => (
-          <Icon name="ios-person" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Explore"
-      component={ExploreScreen}
-      options={{
-        tabBarLabel: 'Explore',
-        tabBarColor: '#d02860',
-        tabBarIcon: ({color}) => (
-          <Icon name="ios-aperture" color={color} size={26} />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+const MainTabScreen = () => {
+  return (
+    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
+      <Tab.Screen
+        name="Home"
+        component={HomeStackScreen}
+        options={{
+          tabBarLabel: 'Trang chủ',
+          tabBarColor: '#FF6347',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={NotificationStackScreen}
+        options={{
+          tabBarLabel: 'Thông báo',
+          tabBarColor: '#1f65ff',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-notifications" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={ExploreScreen}
+        options={{
+          tabBarLabel: 'Khám phá',
+          tabBarColor: '#d02860',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-aperture" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStackScreen}
+        options={{
+          tabBarLabel: 'Cá nhân',
+          tabBarColor: '#694fad',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-person" color={color} size={26} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  )
+};
 
 export default MainTabScreen;
 
@@ -95,7 +100,7 @@ const HomeStackScreen = ({navigation}) => {
         name="Home"
         component={HomeScreen}
         options={{
-          title: 'FoodFinder',
+          title: "Tìm kiếm đồ ăn",
           headerLeft: () => (
             <View style={{marginLeft: 10}}>
               <Icon.Button
@@ -144,6 +149,26 @@ const HomeStackScreen = ({navigation}) => {
       <HomeStack.Screen 
         name="CardItemDetails"
         component={CardItemDetails}
+        options={({route}) => ({
+          // title: route.params.title,
+          headerBackTitleVisible: false,
+          headerTitle: false,
+          headerTransparent: true,
+          headerTintColor: '#fff'
+        })}
+      />
+      <HomeStack.Screen 
+        name="FastFoodScreen"
+        component={FastFoodScreen}
+        options={({route}) => ({
+          // title: route.params.title,
+          title: route.params.title,
+          headerBackTitleVisible: false
+        })}
+      />
+      <HomeStack.Screen 
+        name="FoodItemDetails"
+        component={FoodItemDetails}
         options={({route}) => ({
           // title: route.params.title,
           headerBackTitleVisible: false,

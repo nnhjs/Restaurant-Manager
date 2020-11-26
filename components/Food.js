@@ -2,8 +2,9 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 
 import StarRating from './StarRating';
+import { converPrice } from '../share/utils/convertPrice'
 
-const Card = ({itemData, onPress}) => {
+const Food = ({itemData, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
@@ -17,14 +18,15 @@ const Card = ({itemData, onPress}) => {
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle}>{itemData?.title || itemData?.name}</Text>
           <StarRating ratings={itemData.ratings} reviews={itemData.reviews} />
-          <Text numberOfLines={2} style={styles.cardDetails}>{itemData.description}</Text>
+          <Text numberOfLines={1} style={styles.cardDetails}>{itemData.description}</Text>
+          <Text numberOfLines={1} style={styles.price}>{`Price: ${converPrice(itemData.price)}`}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default Card;
+export default Food;
 
 const styles = StyleSheet.create({
   card: {
@@ -62,6 +64,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardDetails: {
+    fontSize: 12,
+    color: '#444',
+    flex: 1,
+  },
+  price: {
     fontSize: 12,
     color: '#444',
   },

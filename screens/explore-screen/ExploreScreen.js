@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
+import { useSelector, useDispatch } from 'react-redux'
 import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,28 +32,29 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const ExploreScreen = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const initialMapState = {
     markers,
     categories: [
       { 
-        name: 'Fastfood Center', 
+        name: 'Quán ăn nhanh',
         icon: <MaterialCommunityIcons style={styles.chipsIcon} name="food-fork-drink" size={18} />,
       },
       {
-        name: 'Restaurant',
+        name: 'Nhà hàng',
         icon: <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />,
       },
       {
-        name: 'Dineouts',
+        name: 'Quán ăn tối',
         icon: <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />,
       },
       {
-        name: 'Snacks Corner',
+        name: 'Đồ ăn vặt',
         icon: <MaterialCommunityIcons name="food" style={styles.chipsIcon} size={18} />,
       },
       {
-        name: 'Hotel',
+        name: 'Khách sạn',
         icon: <Fontisto name="hotel" style={styles.chipsIcon} size={15} />,
       },
   ],
@@ -97,6 +99,10 @@ const ExploreScreen = () => {
       }, 10);
     });
   });
+
+  useEffect(() => {
+
+  })
 
   const interpolations = state.markers.map((marker, index) => {
     const inputRange = [
@@ -242,7 +248,7 @@ const ExploreScreen = () => {
                 >
                   <Text style={[styles.textSign, {
                     color: '#FF6347'
-                  }]}>Order Now</Text>
+                  }]}>Đặt ngay</Text>
                 </TouchableOpacity>
               </View>
             </View>

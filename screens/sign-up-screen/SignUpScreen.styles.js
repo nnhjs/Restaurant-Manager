@@ -63,5 +63,9 @@ export default StyleSheet.create({
   },
   color_textPrivate: {
       color: 'grey'
-  }
+  },
+  errorMsg: {
+    color: '#FF0000',
+    fontSize: 14,
+},
 })

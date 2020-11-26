@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
-import {data} from '../../model/data';
+import { View, FlatList } from 'react-native';
+import { useSelector } from 'react-redux'
+
 import Card from '../../components/Card';
 import styles from './CardListScreen.styles'
 const CardListScreen = ({navigation}) => {
-
+    const { restaurants } = useSelector(state => state.restaurants)
+    console.log('restaurants', restaurants);
     const renderItem = ({item}) => {
         return (
             <Card 
@@ -17,9 +19,9 @@ const CardListScreen = ({navigation}) => {
     return (
       <View style={styles.container}>
         <FlatList 
-            data={data}
+            data={restaurants?.data}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
         />
       </View>
     );

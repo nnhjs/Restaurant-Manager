@@ -15,13 +15,15 @@ import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer';
+import { useDispatch } from 'react-redux'
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import{ AuthContext } from '../components/context';
+import LoginActions from '../modules/login/login.reducer'
 
 export function DrawerContent(props) {
-
+    const dispatch = useDispatch();
     const paperTheme = useTheme();
 
     const { signOut, toggleTheme } = React.useContext(AuthContext);
@@ -39,8 +41,8 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>@j_doe</Caption>
+                                <Title style={styles.title}>SOFUET</Title>
+                                <Caption style={styles.caption}>@sof_uet</Caption>
                             </View>
                         </View>
 
@@ -65,7 +67,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Home"
+                            label="Trang chủ"
                             onPress={() => {props.navigation.navigate('Home')}}
                         />
                         <DrawerItem 
@@ -76,7 +78,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Profile"
+                            label="Cá nhân"
                             onPress={() => {props.navigation.navigate('Profile')}}
                         />
                         <DrawerItem 
@@ -87,7 +89,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Bookmarks"
+                            label="Lưu trữ"
                             onPress={() => {props.navigation.navigate('BookmarkScreen')}}
                         />
                         <DrawerItem 
@@ -98,7 +100,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Settings"
+                            label="Cài đặt"
                             onPress={() => {props.navigation.navigate('SettingScreen')}}
                         />
                         <DrawerItem 
@@ -109,11 +111,11 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Support"
+                            label="Hỗ trợ"
                             onPress={() => {props.navigation.navigate('SupportScreen')}}
                         />
                     </Drawer.Section>
-                    <Drawer.Section title="Preferences">
+                    <Drawer.Section title="Tính năng">
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
@@ -134,8 +136,11 @@ export function DrawerContent(props) {
                         size={size}
                         />
                     )}
-                    label="Sign Out"
-                    onPress={() => {signOut()}}
+                    label="Đăng xuất"
+                    onPress={() => {
+                        signOut()
+                        dispatch(LoginActions.logoutRequest())
+                    }}
                 />
             </Drawer.Section>
         </View>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 import { 
     View, 
     Text, 
@@ -7,16 +9,22 @@ import {
     Dimensions,
     TextInput,
     ScrollView,
-    StatusBar
+    StatusBar,
+    Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import Toast from 'react-native-toast-message';
+
+import UserTypes from '../../modules/entities/user/user.reducer'
 
 import styles from './SignUpScreen.styles'
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = () => {
+    const navigation = useNavigation()
+    const dispatch = useDispatch()
 
     const [data, setData] = React.useState({
         username: '',
@@ -25,29 +33,42 @@ const SignInScreen = ({navigation}) => {
         check_textInputChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
+        isValidUser: true,
+        isValidPassword: true,
     });
 
     const textInputChange = (val) => {
-        if( val.length !== 0 ) {
+        if( val.trim().length >= 4 ) {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: true
+                check_textInputChange: true,
+                isValidUser: true
             });
         } else {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: false
+                check_textInputChange: false,
+                isValidUser: false
             });
         }
     }
 
     const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val
-        });
+        if( val.trim().length >= 8 ) {
+            setData({
+                ...data,
+                password: val,
+                isValidPassword: true
+            });
+        } else {
+            setData({
+                ...data,
+                password: val,
+                isValidPassword: false
+            });
+        }
     }
 
     const handleConfirmPasswordChange = (val) => {
@@ -71,18 +92,72 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const handleValidUser = (val) => {
+        if( val.trim().length >= 4 ) {
+            setData({
+                ...data,
+                isValidUser: true
+            });
+        } else {
+            setData({
+                ...data,
+                isValidUser: false
+            });
+        }
+    }
+
+    const handleSignUp = () => {
+        if ( data.username.length == 0 || data.password.length == 0 ) {
+            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+                {text: 'Okay'}
+            ]);
+            return;
+        }
+
+        if ( data.username.length < 4 ) {
+            Alert.alert('Wrong Input!', 'length username must than 4 character.', [
+                {text: 'Okay'}
+            ]);
+            return;
+        }
+
+        if ( data.password.length < 8 ) {
+            Alert.alert('Wrong Input!', 'length password must than 8 character.', [
+                {text: 'Okay'}
+            ]);
+            return;
+        }
+
+        // if ( data.password !== data.confirm_password ) {
+        //     Alert.alert('Password is incorrect.', [
+        //         {text: 'Okay'}
+        //     ]);
+        //     return;
+        // }
+
+        dispatch(UserTypes.userCreateRequest({ username: data.username, password: data.password }))
+        navigation.navigate('SignInScreen', {
+            username: data.username,
+            reload: true,
+        })
+        Toast.show({
+            text1: 'Tạo tài khoản thành công',
+            text2: 'Xin chào bạn 👋'
+        });
+    }
+
     return (
       <View style={styles.container}>
           <StatusBar backgroundColor='#FF6347' barStyle="light-content"/>
         <View style={styles.header}>
-            <Text style={styles.text_header}>Register Now!</Text>
+            <Text style={styles.text_header}>Tạo tài khoản tại đây!</Text>
         </View>
         <Animatable.View 
             animation="fadeInUpBig"
             style={styles.footer}
         >
             <ScrollView>
-            <Text style={styles.text_footer}>Username</Text>
+            <Text style={styles.text_footer}>Tên đăng nhập</Text>
             <View style={styles.action}>
                 <FontAwesome 
                     name="user-o"
@@ -90,10 +165,11 @@ const SignInScreen = ({navigation}) => {
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Username"
+                    placeholder="Tên đăng nhập"
                     style={styles.textInput}
                     autoCapitalize="none"
                     onChangeText={(val) => textInputChange(val)}
+                    onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
                 />
                 {data.check_textInputChange ? 
                 <Animatable.View
@@ -107,10 +183,15 @@ const SignInScreen = ({navigation}) => {
                 </Animatable.View>
                 : null}
             </View>
+            { data.isValidUser ? null : 
+            <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>Tên đăng nhập phải có trên 4 kí tự.</Text>
+            </Animatable.View>
+            }
 
             <Text style={[styles.text_footer, {
                 marginTop: 35
-            }]}>Password</Text>
+            }]}>Mật khẩu</Text>
             <View style={styles.action}>
                 <Feather 
                     name="lock"
@@ -118,7 +199,7 @@ const SignInScreen = ({navigation}) => {
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Password"
+                    placeholder="Mật khẩu của bạn"
                     secureTextEntry={data.secureTextEntry ? true : false}
                     style={styles.textInput}
                     autoCapitalize="none"
@@ -142,10 +223,15 @@ const SignInScreen = ({navigation}) => {
                     }
                 </TouchableOpacity>
             </View>
+            { data.isValidPassword ? null : 
+            <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>Mật khẩu phải có trên 8 kí tự.</Text>
+            </Animatable.View>
+            }
 
             <Text style={[styles.text_footer, {
                 marginTop: 35
-            }]}>Confirm Password</Text>
+            }]}>Nhập lại mật khẩu</Text>
             <View style={styles.action}>
                 <Feather 
                     name="lock"
@@ -153,7 +239,7 @@ const SignInScreen = ({navigation}) => {
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Confirm Your Password"
+                    placeholder="Nhập lại mật khẩu"
                     secureTextEntry={data.confirm_secureTextEntry ? true : false}
                     style={styles.textInput}
                     autoCapitalize="none"
@@ -179,16 +265,16 @@ const SignInScreen = ({navigation}) => {
             </View>
             <View style={styles.textPrivate}>
                 <Text style={styles.color_textPrivate}>
-                    By signing up you agree to our
+                    Việc đăng kí của bạn sẽ đồng ý với chúng tôi về
                 </Text>
-                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
-                <Text style={styles.color_textPrivate}>{" "}and</Text>
-                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
+                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Dịch vụ</Text>
+                <Text style={styles.color_textPrivate}>{" "}và</Text>
+                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Chính sách bảo mật</Text>
             </View>
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {}}
+                    onPress={handleSignUp}
                 >
                 <LinearGradient
                     colors={['#FFA07A', '#FF6347']}
@@ -196,7 +282,7 @@ const SignInScreen = ({navigation}) => {
                 >
                     <Text style={[styles.textSign, {
                         color:'#fff'
-                    }]}>Sign Up</Text>
+                    }]}>Đăng kí</Text>
                 </LinearGradient>
                 </TouchableOpacity>
 
@@ -210,7 +296,7 @@ const SignInScreen = ({navigation}) => {
                 >
                     <Text style={[styles.textSign, {
                         color: '#FF6347'
-                    }]}>Sign In</Text>
+                    }]}>Đăng nhập</Text>
                 </TouchableOpacity>
             </View>
             </ScrollView>

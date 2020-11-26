@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import {
   View,
   Text,
@@ -11,16 +12,18 @@ import {
 import {SwipeListView} from 'react-native-swipe-list-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Notifications from '../../model/Notifications';
 import styles from './NotificationScreen.styles'
+
+import NotificationTypes from '../../modules/entities/notification/notification.reducer'
+
 const NotificationScreen = ({navigation}) => {
-  const [listData, setListData] = useState(
-    Notifications.map((NotificationItem, index) => ({
-      key: `${index}`,
-      title: NotificationItem.title,
-      details: NotificationItem.details,
-    })),
-  );
+  const dispatch = useDispatch()
+  const { notifications } = useSelector(state => state.notifications)
+  const listData = notifications?.map((NotificationItem, index) => ({
+    key: `${index}`,
+    title: NotificationItem.title,
+    details: NotificationItem.details,
+  }));
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -106,6 +109,10 @@ const NotificationScreen = ({navigation}) => {
       />
     );
   };
+
+  useEffect(() => {
+    dispatch(NotificationTypes.notificationAllRequest())
+  }, [])
 
   const HiddenItemWithActions = props => {
     const {

@@ -61,7 +61,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   card: {
-    height: 100,
+    height: 110,
     marginVertical: 10,
     flexDirection: 'row',
     shadowColor: '#999',

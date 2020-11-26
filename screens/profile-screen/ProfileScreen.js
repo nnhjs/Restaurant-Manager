@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, SafeAreaView, StyleSheet} from 'react-native';
+import { useSelector } from 'react-redux'
 import {
   Avatar,
   Title,
@@ -10,27 +11,9 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './ProfileScreen.styles'
-// import Share from 'react-native-share';
-
-// import files from '../assets/filesBase64';
 
 const ProfileScreen = () => {
-
-  // const myCustomShare = async() => {
-  //   const shareOptions = {
-  //     message: 'Order your next meal from FoodFinder App. I\'ve already ordered more than 10 meals on it.',
-  //     url: files.appLogo,
-  //     // urls: [files.image1, files.image2]
-  //   }
-
-  //   try {
-  //     const ShareResponse = await Share.open(shareOptions);
-  //     console.log(JSON.stringify(ShareResponse));
-  //   } catch(error) {
-  //     console.log('Error => ', error);
-  //   }
-  // };
-
+  const { account } = useSelector(state => state.login)
   return (
     <SafeAreaView style={styles.container}>
 
@@ -38,7 +21,7 @@ const ProfileScreen = () => {
         <View style={{flexDirection: 'row', marginTop: 15}}>
           <Avatar.Image 
             source={{
-              uri: 'https://api.adorable.io/avatars/80/abott@adorable.png',
+              uri: account?.img_url || 'https://api.adorable.io/avatars/80/abott@adorable.png',
             }}
             size={80}
           />
@@ -46,8 +29,8 @@ const ProfileScreen = () => {
             <Title style={[styles.title, {
               marginTop:15,
               marginBottom: 5,
-            }]}>John Doe</Title>
-            <Caption style={styles.caption}>@j_doe</Caption>
+            }]}> { account?.name } </Title>
+            <Caption style={styles.caption}> { `@${account?.username}` } </Caption>
           </View>
         </View>
       </View>
@@ -55,15 +38,15 @@ const ProfileScreen = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="map-marker-radius" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>Kolkata, India</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}> { account?.address || 'City' } </Text>
         </View>
         <View style={styles.row}>
           <Icon name="phone" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>+91-900000009</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}> { account?.phone || 'Phone' } </Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>john_doe@email.com</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}> { account?.gmail || 'Email' } </Text>
         </View>
       </View>
 
@@ -72,11 +55,11 @@ const ProfileScreen = () => {
             borderRightColor: '#dddddd',
             borderRightWidth: 1
           }]}>
-            <Title>₹140.50</Title>
+            <Title> { account?.wallet || 0 } </Title>
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>12</Title>
+            <Title> { account?.order || 0} </Title>
             <Caption>Orders</Caption>
           </View>
       </View>

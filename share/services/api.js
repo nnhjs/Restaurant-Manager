@@ -17,6 +17,8 @@ const create = (baseURL = AppConfig.apiUrl) => {
     // here are some default headers
     headers: {
       'Cache-Control': 'no-cache',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
     // 10 second timeout...
     timeout: 10000,
@@ -36,10 +38,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
   // Since we can't hide from that, we embrace it by getting out of the
   // way at this level.
   //
-  const setAuthToken = (userAuth) => api.setHeader('Authorization', 'Bearer ' + userAuth)
-  const removeAuthToken = () => api.deleteHeader('Authorization')
-  const login = (userAuth) => api.post('api/authenticate', userAuth)
-  const register = (user) => api.post('api/register', user)
+  const login = (userAuth) => api.post('api/login', userAuth)
   const forgotPassword = (data) =>
     api.post('api/account/reset-password/init', data, {
       headers: { 'Content-Type': 'text/plain', Accept: 'application/json, text/plain, */*' },
@@ -54,35 +53,23 @@ const create = (baseURL = AppConfig.apiUrl) => {
       { headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/plain, */*' } },
     )
 
-  const getUser = (userId) => api.get('api/users/' + userId)
-  const getUsers = (options) => api.get('api/users', options)
-  const createUser = (user) => api.post('api/users', user)
-  const updateUser = (user) => api.put('api/users', user)
-  const deleteUser = (userId) => api.delete('api/users/' + userId)
+  const getNotification = (notificationId) => api.get('api/notifications/' + notificationId)
+  const getNotifications = (options) => api.get('api/notifications', options)
+  const createNotification = (notification) => api.post('api/notifications', notification)
+  const updateNotification = (notification) => api.put('api/notifications', notification)
+  const deleteNotification = (notificationId) => api.delete('api/notifications/' + notificationId)
 
-  const getNew = (newsId) => api.get('api/news/' + newsId)
-  const getNews = (options) => api.get('api/news', options)
-  const createNews = (news) => api.post('api/news', news)
-  const updateNews = (news) => api.put('api/news', news)
-  const deleteNews = (newsId) => api.delete('api/news/' + newsId)
+  const getRestaurant = (restaurantsId) => api.get('api/restaurants/' + restaurantsId)
+  const getRestaurants = (options) => api.get('api/restaurants', options)
+  const createRestaurant = (restaurants) => api.post('api/restaurants', restaurants)
+  const updateRestaurant = (restaurants) => api.put('api/restaurants', restaurants)
+  const deleteRestaurant = (restaurantsId) => api.delete('api/restaurants/' + restaurantsId)
 
-  const getFacility = (facilityId) => api.get('api/facilities/' + facilityId)
-  const getFacilities = (options) => api.get('api/facilities', options)
-  const createFacility = (facility) => api.post('api/facilities', facility)
-  const updateFacility = (facility) => api.put('api/facilities', facility)
-  const deleteFacility = (facilityId) => api.delete('api/facilities/' + facilityId)
-
-  const getFacilityType = (facilityTypeId) => api.get('api/facility-types/' + facilityTypeId)
-  const getFacilityTypes = (options) => api.get('api/facility-types', options)
-  const createFacilityType = (facilityType) => api.post('api/facility-types', facilityType)
-  const updateFacilityType = (facilityType) => api.put('api/facility-types', facilityType)
-  const deleteFacilityType = (facilityTypeId) => api.delete('api/facility-types/' + facilityTypeId)
-
-  const getLicense = (licenseId) => api.get('api/licenses/' + licenseId)
-  const getLicenses = (options) => api.get('api/licenses', options)
-  const createLicense = (license) => api.post('api/licenses', license)
-  const updateLicense = (license) => api.put('api/licenses', license)
-  const deleteLicense = (licenseId) => api.delete('api/licenses/' + licenseId)
+  const getFood = (foodsId) => api.get('api/foods/' + foodsId)
+  const getFoods = (options) => api.get('api/foods', options)
+  const createFood = (foods) => api.post('api/foods', foods)
+  const updateFood = (foods) => api.put('api/foods', foods)
+  const deleteFood = (foodsId) => api.delete('api/foods/' + foodsId)
 
   const getIdPaper = (idPaperId) => api.get('api/id-papers/' + idPaperId)
   const getIdPapers = (options) => api.get('api/id-papers', options)
@@ -95,12 +82,6 @@ const create = (baseURL = AppConfig.apiUrl) => {
   const createIdPaperType = (idPaperType) => api.post('api/id-paper-types', idPaperType)
   const updateIdPaperType = (idPaperType) => api.put('api/id-paper-types', idPaperType)
   const deleteIdPaperType = (idPaperTypeId) => api.delete('api/id-paper-types/' + idPaperTypeId)
-
-  const getNotification = (notificationId) => api.get('api/notifications/' + notificationId)
-  const getNotifications = (options) => api.get('api/notifications', options)
-  const createNotification = (notification) => api.post('api/notifications', notification)
-  const updateNotification = (notification) => api.put('api/notifications', notification)
-  const deleteNotification = (notificationId) => api.delete('api/notifications/' + notificationId)
 
   const getInvestigation = (investigationId) => api.get('api/investigations/' + investigationId)
   const getInvestigations = (options) => api.get('api/investigations', options)
@@ -209,53 +190,29 @@ const create = (baseURL = AppConfig.apiUrl) => {
   //
   return {
     // a list of the API functions from step 2
-    createUser,
-    updateUser,
-    getUsers,
-    getUser,
-    deleteUser,
+    createNotification,
+    updateNotification,
+    getNotifications,
+    getNotification,
+    deleteNotification,
+    
+    createRestaurant,
+    updateRestaurant,
+    getRestaurants,
+    getRestaurant,
+    deleteRestaurant,
 
-    createNews,
-    updateNews,
-    getNew,
-    getNews,
-    deleteNews,
-
-    createFacility,
-    updateFacility,
-    getFacilities,
-    getFacility,
-    deleteFacility,
-
-    createFacilityType,
-    updateFacilityType,
-    getFacilityTypes,
-    getFacilityType,
-    deleteFacilityType,
-
-    createLicense,
-    updateLicense,
-    getLicenses,
-    getLicense,
-    deleteLicense,
-
-    createIdPaper,
-    updateIdPaper,
-    getIdPapers,
-    getIdPaper,
-    deleteIdPaper,
+    getFood,
+    getFoods,
+    createFood,
+    deleteFood,
+    updateFood,
 
     createIdPaperType,
     updateIdPaperType,
     getIdPaperTypes,
     getIdPaperType,
     deleteIdPaperType,
-
-    createNotification,
-    updateNotification,
-    getNotifications,
-    getNotification,
-    deleteNotification,
 
     createInvestigation,
     updateInvestigation,
@@ -341,10 +298,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
     getSystemLog,
     deleteSystemLog,
     // ignite-jhipster-api-export-needle
-    setAuthToken,
-    removeAuthToken,
     login,
-    register,
     forgotPassword,
     getAccount,
     updateAccount,

@@ -39,15 +39,15 @@ const SplashScreen = ({navigation}) => {
         >
             <Text style={[styles.title, {
                 color: colors.text
-            }]}>Find best food in your locality!</Text>
-            <Text style={styles.text}>Sign in with account</Text>
+            }]}>Tìm kiếm đồ ăn gần bạn!</Text>
+            <Text style={styles.text}>Đăng nhập với tài khoản</Text>
             <View style={styles.button}>
             <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
                 <LinearGradient
                     colors={['#FFA07A', '#FF6347']}
                     style={styles.signIn}
                 >
-                    <Text style={styles.textSign}>Get Started</Text>
+                    <Text style={styles.textSign}>Bắt đầu</Text>
                     <MaterialIcons 
                         name="navigate-next"
                         color="#fff"
