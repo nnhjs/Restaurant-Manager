@@ -32,12 +32,11 @@ export function* getUsers(api, action) {
 }
 
 export function* createUsers(api, action) {
-  console.log('create users')
   const { options } = action
+  console.log('optiones', options);
   // make the call to the api
   const apiCall = call(api.createUser, options)
   const response = yield call(callApi, apiCall)
-  console.log('response: ', response)
   // success?
   if (response.ok) {
     yield put(UserActions.userCreateSuccess(response.data))

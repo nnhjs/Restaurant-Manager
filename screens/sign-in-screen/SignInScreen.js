@@ -14,7 +14,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from 'react-native-paper';
-import Toast from 'react-native-toast-message'
 
 import { AuthContext } from '../../components/context';
 

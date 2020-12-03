@@ -17,7 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-import { markers, mapDarkStyle, mapStandardStyle } from '../../model/mapData';
+import { mapDarkStyle, mapStandardStyle } from '../../model/mapData';
 import StarRating from '../../components/StarRating';
 
 import { useTheme } from '@react-navigation/native';
@@ -33,9 +33,10 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 const ExploreScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-
+  const restaurants = useSelector(state => state?.restaurants?.restaurants?.data) 
+  console.log('restaurants', restaurants)
   const initialMapState = {
-    markers,
+    restaurants,
     categories: [
       { 
         name: 'Quán ăn nhanh',
@@ -74,8 +75,8 @@ const ExploreScreen = () => {
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
+      if (index >= state.restaurants.length) {
+        index = state.restaurants.length - 1;
       }
       if (index <= 0) {
         index = 0;
@@ -86,7 +87,7 @@ const ExploreScreen = () => {
       const regionTimeout = setTimeout(() => {
         if( mapIndex !== index ) {
           mapIndex = index;
-          const { coordinate } = state.markers[index];
+          const { coordinate } = state.restaurants[index];
           _map.current.animateToRegion(
             {
               ...coordinate,
@@ -100,11 +101,7 @@ const ExploreScreen = () => {
     });
   });
 
-  useEffect(() => {
-
-  })
-
-  const interpolations = state.markers.map((marker, index) => {
+  const interpolations = state.restaurants.map((marker, index) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -143,20 +140,21 @@ const ExploreScreen = () => {
         provider={PROVIDER_GOOGLE}
         customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
       >
-        {state.markers.map((marker, index) => {
-          const scaleStyle = {
-            transform: [
-              {
-                scale: interpolations[index].scale,
-              },
-            ],
-          };
+        {state.restaurants.map((marker, index) => {
+          // const scaleStyle = {
+          //   transform: [
+          //     {
+          //       scale: interpolations[index].scale,
+          //     },
+          //   ],
+          // };
           return (
             <MapView.Marker key={index} coordinate={marker.coordinate} onPress={(e)=>onMarkerPress(e)}>
               <Animated.View style={[styles.markerWrap]}>
                 <Animated.Image
                   source={images.mapMarker}
-                  style={[styles.marker, scaleStyle]}
+                  // style={[styles.marker, scaleStyle]}
+                  style={[styles.marker]}
                   resizeMode="cover"
                 />
               </Animated.View>
@@ -227,10 +225,10 @@ const ExploreScreen = () => {
           {useNativeDriver: true}
         )}
       >
-        {state.markers.map((marker, index) =>(
+        {state.restaurants.map((marker, index) =>(
           <View style={styles.card} key={index}>
             <Image 
-              source={marker.image}
+              source={{uri: marker.image}}
               style={styles.cardImage}
               resizeMode="cover"
             />

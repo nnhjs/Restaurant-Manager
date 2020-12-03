@@ -5,6 +5,7 @@ import API from '../services/api'
 
 // import { NewsTypes } from '../../modules/entities/news/news.reducer' -- data maaux
 import { LoginTypes } from '../../modules/login/login.reducer'
+import { UserTypes } from '../../modules/entities/user/user.reducer'
 import { NotificationTypes } from '../../modules/entities/notification/notification.reducer'
 import { RestaurantTypes } from '../../modules/entities/restaurant/restaurant.reducer'
 import { FoodTypes } from '../../modules/entities/food/food.reducer'
@@ -13,6 +14,7 @@ import { FoodTypes } from '../../modules/entities/food/food.reducer'
 
 /* ------------- Sagas ------------- */
 import { login } from '../../modules/login/login.saga'
+import { createUsers } from '../../modules/entities/user/user.saga'
 import { getNotification, getNotifications, updateNotification, deleteNotification } from '../../modules/entities/notification/notification.saga'
 import { getRestaurant, getRestaurants, } from '../../modules/entities/restaurant/restaurant.saga'
 import { getFood, getFoods } from '../../modules/entities/food/food.saga'
@@ -30,6 +32,7 @@ export default function* root() {
   yield all([
     // some sagas only receive an action
     takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
+    takeLatest(UserTypes.USER_CREATE_REQUEST, createUsers, api),
 
     takeLatest(NotificationTypes.NOTIFICATION_REQUEST, getNotification, api),
     takeLatest(NotificationTypes.NOTIFICATION_ALL_REQUEST, getNotifications, api),

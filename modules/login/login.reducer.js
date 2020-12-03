@@ -32,7 +32,6 @@ export const request = (state) => state.merge({ fetching: true })
 // we've successfully logged in
 export const success = (state, data) => {
   const { account } = data
-  console.log('account', account)
   return state.merge({ fetching: false, error: null, account })
 }
 
