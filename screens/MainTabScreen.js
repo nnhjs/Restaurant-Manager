@@ -10,7 +10,7 @@ import HomeScreen from './home-screen/HomeScreen';
 import NotificationScreen from './notification-screen/NotificationScreen';
 import ExploreScreen from './explore-screen/ExploreScreen';
 import ProfileScreen from './profile-screen/ProfileScreen';
-import MapTestScreen from './map-test-screen/MapTestScreen';
+import CartScreen from './cart-screen/CartScreen';
 import EditProfileScreen from './edit-profile-screen/EditProfileScreen';
 
 import {useTheme, Avatar} from 'react-native-paper';
@@ -25,6 +25,7 @@ import FoodItemDetails from './food-item-details/FoodItemDetail'
 const HomeStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
+const CartStack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -62,6 +63,18 @@ const MainTabScreen = () => {
           tabBarIcon: ({color}) => (
             <Icon name="ios-aperture" color={color} size={26} />
           ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartStackScreen}
+        options={{
+          tabBarLabel: 'Giỏ hàng',
+          tabBarColor: '#5aa469',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-cart" color={color} size={26} />
+          ),
+          tabBarBadge: 3,
         }}
       />
       <Tab.Screen
@@ -259,5 +272,40 @@ const ProfileStackScreen = ({navigation}) => {
         component={EditProfileScreen}
       />
     </ProfileStack.Navigator>
+  );
+};
+
+const CartStackScreen = ({navigation}) => {
+  const {colors} = useTheme();
+
+  return (
+    <CartStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.background,
+          shadowColor: colors.background, // iOS
+          elevation: 0, // Android
+        },
+        headerTintColor: colors.text,
+      }}>
+      <CartStack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          title: 'Giỏ hàng',
+          headerLeft: () => (
+            <View style={{marginLeft: 10}}>
+              <Icon.Button
+                name="ios-menu"
+                size={25}
+                backgroundColor={colors.background}
+                color={colors.text}
+                onPress={() => navigation.openDrawer()}
+              />
+            </View>
+          ),
+        }}
+      />
+    </CartStack.Navigator>
   );
 };

@@ -1,4 +1,5 @@
-import React, {useRef} from 'react';
+import React, { useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import {
   View,
   Text,
@@ -9,10 +10,13 @@ import {
 import HeaderImageScrollView, {
   TriggeringView,
 } from 'react-native-image-header-scroll-view';
+import { converPrice } from '../../share/utils/convertPrice'
 
 import * as Animatable from 'react-native-animatable';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import FoodActions from '../../modules/entities/food/food.reducer'
 
 import styles from './CardItemDetails.styles'
 import { images } from '../../share/images/images'
@@ -20,9 +24,14 @@ const MIN_HEIGHT = Platform.OS === 'ios' ? 90 : 55;
 const MAX_HEIGHT = 350;
 
 const CardItemDetails = ({route}) => {
+  const dispatch = useDispatch();
   const itemData = route.params.itemData;
   const navTitleView = useRef(null);
-
+  const { foods } = useSelector(state => state.foods);
+  console.log('foods', foods)
+  useEffect(() => {
+    dispatch(FoodActions.foodAllRequest({ id_restaurant: itemData._id }))
+  }, [])
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -60,7 +69,30 @@ const CardItemDetails = ({route}) => {
         <View style={[styles.section, styles.sectionLarge]}>
           <Text style={styles.sectionContent}>{itemData.description}</Text>
         </View>
-
+        {
+          foods?.data.map((item) => {
+            return (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 16, paddingVertical: 24, alignItems: 'center' }} >
+                <View>
+                  <Text style={{ paddingBottom: 24, }} >
+                    { `${item?.name}` }
+                  </Text>
+                  <Text>
+                    { `${converPrice(item?.price)}` }
+                  </Text>
+                </View>
+                <Image source={{ uri: item?.image}} style={{ width: 100, height: 100, borderRadius: 5, }} />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
+                  <Image source={images.subtract} style={{ width: 40, height: 40 }} />
+                  <Text style={{ marginHorizontal: 6, }} >
+                    0
+                  </Text>
+                  <Image source={images.add} style={{ width: 40, height: 40 }} />
+                </View>
+              </View>
+            )
+          })
+        }
         <View style={styles.section}>
           <View style={styles.categories}>
             {itemData.categories.map((category, index) => (

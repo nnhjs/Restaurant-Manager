@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react';
 import { View, FlatList } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import Food from '../../components/Food';
 import styles from './FastFoodScreen.styles'
 
 import FoodActions from '../../modules/entities/food/food.reducer'
 
-const FastFoodScreen = ({navigation}) => {
-
+const FastFoodScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { typeFood } = route.params;
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(FoodActions.foodAllRequest())
+    dispatch(FoodActions.foodAllRequest({ typeFood }))
   }, []) 
 
   const { foods } = useSelector(state => state.foods)
-  console.log('foods', foods);
   const renderItem = ({item}) => {
       return (
           <Food 

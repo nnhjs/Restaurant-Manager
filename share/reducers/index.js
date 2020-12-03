@@ -11,6 +11,7 @@ export const reducers = combineReducers({
   notifications: require('../../modules/entities/notification/notification.reducer').reducer,
   restaurants: require('../../modules/entities/restaurant/restaurant.reducer').reducer,
   foods: require('../../modules/entities/food/food.reducer').reducer,
+  cart: require('../../modules/entities/cart/cart.reducer').reducer,
 })
 
 export default () => {

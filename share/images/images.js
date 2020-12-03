@@ -7,4 +7,6 @@ export const images = {
 
   logo: require('../../assets/logo.png'),
   mapMarker: require('../../assets/map_marker.png'),
+  add: require('../../assets/add.png'),
+  subtract: require('../../assets/subtract.png'),
 }

@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
+import { useNavigation } from '@react-navigation/native'
 import { useSelector, useDispatch } from 'react-redux'
 import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
 
@@ -32,9 +33,10 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const ExploreScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
+
   const restaurants = useSelector(state => state?.restaurants?.restaurants?.data) 
-  console.log('restaurants', restaurants)
   const initialMapState = {
     restaurants,
     categories: [
@@ -60,8 +62,8 @@ const ExploreScreen = () => {
       },
   ],
     region: {
-      latitude: 22.62938671242907,
-      longitude: 88.4354486029795,
+      latitude: 21.027763,
+      longitude: 105.834160,
       latitudeDelta: 0.04864195044303443,
       longitudeDelta: 0.040142817690068,
     },
@@ -238,7 +240,9 @@ const ExploreScreen = () => {
               <Text numberOfLines={1} style={styles.cardDescription}>{marker.description}</Text>
               <View style={styles.button}>
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate('CardItemDetails', {itemData: marker})
+                  }}
                   style={[styles.signIn, {
                     borderColor: '#FF6347',
                     borderWidth: 1

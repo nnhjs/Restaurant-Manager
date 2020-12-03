@@ -52,7 +52,6 @@ const HomeScreen = ({navigation}) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { restaurants } = useSelector(state => state.restaurants);
-  console.log('restaurants', restaurants)
   useEffect(() => {
     dispatch(RestaurantActions.restaurantAllRequest())
   }, [])
@@ -103,7 +102,7 @@ const HomeScreen = ({navigation}) => {
         <TouchableOpacity
           style={styles.categoryBtn}
           onPress={() =>
-            navigation.navigate('FastFoodScreen', {title: 'Đồ ăn nhanh'})
+            navigation.navigate('FastFoodScreen', {title: 'Đồ ăn nhanh', typeFood: 'fastFood'})
           }>
           <View style={styles.categoryIcon}>
             <MaterialCommunityIcons
@@ -114,7 +113,9 @@ const HomeScreen = ({navigation}) => {
           </View>
           <Text style={styles.categoryBtnTxt}>Đồ ăn nhanh</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.categoryBtn} onPress={() => {}}>
+        <TouchableOpacity style={styles.categoryBtn} onPress={() =>
+            navigation.navigate('FastFoodScreen', {title: 'Đồ ăn vặt', typeFood: 'snackFood'})
+          }>
           <View style={styles.categoryIcon}>
             <MaterialCommunityIcons name="food" size={35} color="#FF6347" />
           </View>
