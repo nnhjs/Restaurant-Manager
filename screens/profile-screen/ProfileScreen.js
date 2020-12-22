@@ -56,11 +56,11 @@ const ProfileScreen = () => {
             borderRightWidth: 1
           }]}>
             <Title> { account?.wallet || 0 } </Title>
-            <Caption>Wallet</Caption>
+            <Caption>Ví</Caption>
           </View>
           <View style={styles.infoBox}>
             <Title> { account?.order || 0} </Title>
-            <Caption>Orders</Caption>
+            <Caption>Đơn hàng</Caption>
           </View>
       </View>
 
@@ -68,32 +68,32 @@ const ProfileScreen = () => {
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="heart-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Your Favorites</Text>
+            <Text style={styles.menuItemText}>Yêu Thích</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="credit-card" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Payment</Text>
+            <Text style={styles.menuItemText}>Thanh toán</Text>
           </View>
         </TouchableRipple>
         {/* <TouchableRipple onPress={myCustomShare}> */}
         <TouchableRipple>
           <View style={styles.menuItem}>
             <Icon name="share-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Tell Your Friends</Text>
+            <Text style={styles.menuItemText}>Chia sẻ với bạn bè</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Support</Text>
+            <Text style={styles.menuItemText}>Hỗ trợ</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="settings-outline" color="#FF6347" size={25}/>
-            <Text style={styles.menuItemText}>Settings</Text>
+            <Text style={styles.menuItemText}>Cài đặt</Text>
           </View>
         </TouchableRipple>
       </View>

@@ -1,26 +1,22 @@
-import React, { useEffect } from 'react';
-
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import HomeScreen from './home-screen/HomeScreen';
-import NotificationScreen from './notification-screen/NotificationScreen';
-import ExploreScreen from './explore-screen/ExploreScreen';
-import ProfileScreen from './profile-screen/ProfileScreen';
-import CartScreen from './cart-screen/CartScreen';
-import EditProfileScreen from './edit-profile-screen/EditProfileScreen';
-
-import {useTheme, Avatar} from 'react-native-paper';
-import {View} from 'react-native-animatable';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import CardListScreen from './card-list-screen/CardListScreen';
-import CardItemDetails from './card-item-details/CardItemDetails';
-import FastFoodScreen from './fast-food-screen/FastFoodScreen';
-import FoodItemDetails from './food-item-details/FoodItemDetail'
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { View } from "react-native-animatable";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Avatar, useTheme } from "react-native-paper";
+import Icon from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector } from "react-redux";
+import CardItemDetails from "./card-item-details/CardItemDetails";
+import CardListScreen from "./card-list-screen/CardListScreen";
+import CartScreen from "./cart-screen/CartScreen";
+import EditProfileScreen from "./edit-profile-screen/EditProfileScreen";
+import ExploreScreen from "./explore-screen/ExploreScreen";
+import FastFoodScreen from "./fast-food-screen/FastFoodScreen";
+import FoodItemDetails from "./food-item-details/FoodItemDetail";
+import HomeScreen from "./home-screen/HomeScreen";
+import NotificationScreen from "./notification-screen/NotificationScreen";
+import ProfileScreen from "./profile-screen/ProfileScreen";
 
 const HomeStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
@@ -30,15 +26,16 @@ const CartStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => {
+  const { carts } = useSelector((state) => state.carts);
   return (
     <Tab.Navigator initialRouteName="Home" activeColor="#fff">
       <Tab.Screen
         name="Home"
         component={HomeStackScreen}
         options={{
-          tabBarLabel: 'Trang chủ',
-          tabBarColor: '#FF6347',
-          tabBarIcon: ({color}) => (
+          tabBarLabel: "Trang chủ",
+          tabBarColor: "#FF6347",
+          tabBarIcon: ({ color }) => (
             <Icon name="ios-home" color={color} size={26} />
           ),
         }}
@@ -47,9 +44,9 @@ const MainTabScreen = () => {
         name="Notifications"
         component={NotificationStackScreen}
         options={{
-          tabBarLabel: 'Thông báo',
-          tabBarColor: '#1f65ff',
-          tabBarIcon: ({color}) => (
+          tabBarLabel: "Thông báo",
+          tabBarColor: "#1f65ff",
+          tabBarIcon: ({ color }) => (
             <Icon name="ios-notifications" color={color} size={26} />
           ),
         }}
@@ -58,9 +55,9 @@ const MainTabScreen = () => {
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarLabel: 'Khám phá',
-          tabBarColor: '#d02860',
-          tabBarIcon: ({color}) => (
+          tabBarLabel: "Khám phá",
+          tabBarColor: "#d02860",
+          tabBarIcon: ({ color }) => (
             <Icon name="ios-aperture" color={color} size={26} />
           ),
         }}
@@ -69,33 +66,34 @@ const MainTabScreen = () => {
         name="Cart"
         component={CartStackScreen}
         options={{
-          tabBarLabel: 'Giỏ hàng',
-          tabBarColor: '#5aa469',
-          tabBarIcon: ({color}) => (
+          tabBarLabel: "Giỏ hàng",
+          tabBarColor: "#5aa469",
+          tabBarIcon: ({ color }) => (
             <Icon name="ios-cart" color={color} size={26} />
           ),
-          tabBarBadge: 3,
+          tabBarBadge: carts.length || null,
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileStackScreen}
         options={{
-          tabBarLabel: 'Cá nhân',
-          tabBarColor: '#694fad',
-          tabBarIcon: ({color}) => (
+          tabBarLabel: "Cá nhân",
+          tabBarColor: "#694fad",
+          tabBarIcon: ({ color }) => (
             <Icon name="ios-person" color={color} size={26} />
           ),
         }}
       />
     </Tab.Navigator>
-  )
+  );
 };
 
 export default MainTabScreen;
 
-const HomeStackScreen = ({navigation}) => {
-  const {colors} = useTheme();
+const HomeStackScreen = ({ navigation }) => {
+  const { account } = useSelector((state) => state.login);
+  const { colors } = useTheme();
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -106,16 +104,17 @@ const HomeStackScreen = ({navigation}) => {
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
-      }}>
+      }}
+    >
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
         options={{
           title: "Tìm kiếm đồ ăn",
           headerLeft: () => (
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <Icon.Button
                 name="ios-menu"
                 size={25}
@@ -126,7 +125,7 @@ const HomeStackScreen = ({navigation}) => {
             </View>
           ),
           headerRight: () => (
-            <View style={{flexDirection: 'row', marginRight: 10}}>
+            <View style={{ flexDirection: "row", marginRight: 10 }}>
               <Icon.Button
                 name="ios-search"
                 size={25}
@@ -135,14 +134,14 @@ const HomeStackScreen = ({navigation}) => {
                 onPress={() => {}}
               />
               <TouchableOpacity
-                style={{paddingHorizontal: 10, marginTop: 5}}
+                style={{ paddingHorizontal: 10, marginTop: 5 }}
                 onPress={() => {
-                  navigation.navigate('Profile');
-                }}>
+                  navigation.navigate("Profile");
+                }}
+              >
                 <Avatar.Image
                   source={{
-                    uri:
-                      'https://api.adorable.io/avatars/80/abott@adorable.png',
+                    uri: account?.img_url,
                   }}
                   size={30}
                 />
@@ -151,60 +150,61 @@ const HomeStackScreen = ({navigation}) => {
           ),
         }}
       />
-      <HomeStack.Screen 
+      <HomeStack.Screen
         name="CardListScreen"
         component={CardListScreen}
-        options={({route}) => ({
+        options={({ route }) => ({
           title: route.params.title,
-          headerBackTitleVisible: false
+          headerBackTitleVisible: false,
         })}
       />
-      <HomeStack.Screen 
+      <HomeStack.Screen
         name="CardItemDetails"
         component={CardItemDetails}
-        options={({route}) => ({
+        options={({ route }) => ({
           // title: route.params.title,
           headerBackTitleVisible: false,
           headerTitle: false,
           headerTransparent: true,
-          headerTintColor: '#fff'
+          headerTintColor: "#fff",
         })}
       />
-      <HomeStack.Screen 
+      <HomeStack.Screen
         name="FastFoodScreen"
         component={FastFoodScreen}
-        options={({route}) => ({
+        options={({ route }) => ({
           // title: route.params.title,
           title: route.params.title,
-          headerBackTitleVisible: false
+          headerBackTitleVisible: false,
         })}
       />
-      <HomeStack.Screen 
+      <HomeStack.Screen
         name="FoodItemDetails"
         component={FoodItemDetails}
-        options={({route}) => ({
+        options={({ route }) => ({
           // title: route.params.title,
           headerBackTitleVisible: false,
           headerTitle: false,
           headerTransparent: true,
-          headerTintColor: '#fff'
+          headerTintColor: "#fff",
         })}
       />
     </HomeStack.Navigator>
   );
 };
 
-const NotificationStackScreen = ({navigation}) => (
+const NotificationStackScreen = ({ navigation }) => (
   <NotificationStack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: '#1f65ff',
+        backgroundColor: "#1f65ff",
       },
-      headerTintColor: '#fff',
+      headerTintColor: "#fff",
       headerTitleStyle: {
-        fontWeight: 'bold',
+        fontWeight: "bold",
       },
-    }}>
+    }}
+  >
     <NotificationStack.Screen
       name="Notifications"
       component={NotificationScreen}
@@ -222,8 +222,8 @@ const NotificationStackScreen = ({navigation}) => (
   </NotificationStack.Navigator>
 );
 
-const ProfileStackScreen = ({navigation}) => {
-  const {colors} = useTheme();
+const ProfileStackScreen = ({ navigation }) => {
+  const { colors } = useTheme();
 
   return (
     <ProfileStack.Navigator
@@ -234,14 +234,15 @@ const ProfileStackScreen = ({navigation}) => {
           elevation: 0, // Android
         },
         headerTintColor: colors.text,
-      }}>
+      }}
+    >
       <ProfileStack.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          title: '',
+          title: "",
           headerLeft: () => (
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <Icon.Button
                 name="ios-menu"
                 size={25}
@@ -252,13 +253,13 @@ const ProfileStackScreen = ({navigation}) => {
             </View>
           ),
           headerRight: () => (
-            <View style={{marginRight: 10}}>
+            <View style={{ marginRight: 10 }}>
               <MaterialCommunityIcons.Button
                 name="account-edit"
                 size={25}
                 backgroundColor={colors.background}
                 color={colors.text}
-                onPress={() => navigation.navigate('EditProfile')}
+                onPress={() => navigation.navigate("EditProfile")}
               />
             </View>
           ),
@@ -267,7 +268,7 @@ const ProfileStackScreen = ({navigation}) => {
       <ProfileStack.Screen
         name="EditProfile"
         options={{
-          title: 'Edit Profile',
+          title: "Edit Profile",
         }}
         component={EditProfileScreen}
       />
@@ -275,8 +276,8 @@ const ProfileStackScreen = ({navigation}) => {
   );
 };
 
-const CartStackScreen = ({navigation}) => {
-  const {colors} = useTheme();
+const CartStackScreen = ({ navigation }) => {
+  const { colors } = useTheme();
 
   return (
     <CartStack.Navigator
@@ -287,14 +288,15 @@ const CartStackScreen = ({navigation}) => {
           elevation: 0, // Android
         },
         headerTintColor: colors.text,
-      }}>
+      }}
+    >
       <CartStack.Screen
         name="Cart"
         component={CartScreen}
         options={{
-          title: 'Giỏ hàng',
+          title: "Giỏ hàng",
           headerLeft: () => (
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <Icon.Button
                 name="ios-menu"
                 size={25}

@@ -1,7 +1,6 @@
 // a library to wrap and simplify api calls
-import apisauce from 'apisauce'
-
-import AppConfig from '../../config/app-config'
+import apisauce from "apisauce";
+import AppConfig from "../../config/app-config";
 
 // our "constructor"
 const create = (baseURL = AppConfig.apiUrl) => {
@@ -16,13 +15,13 @@ const create = (baseURL = AppConfig.apiUrl) => {
     baseURL,
     // here are some default headers
     headers: {
-      'Cache-Control': 'no-cache',
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      "Cache-Control": "no-cache",
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
     // 10 second timeout...
     timeout: 10000,
-  })
+  });
 
   // ------
   // STEP 2
@@ -38,39 +37,58 @@ const create = (baseURL = AppConfig.apiUrl) => {
   // Since we can't hide from that, we embrace it by getting out of the
   // way at this level.
   //
-  const login = (userAuth) => api.post('api/login', userAuth)
+  const login = (userAuth) => api.post("api/login", userAuth);
   const forgotPassword = (data) =>
-    api.post('api/account/reset-password/init', data, {
-      headers: { 'Content-Type': 'text/plain', Accept: 'application/json, text/plain, */*' },
-    })
+    api.post("api/account/reset-password/init", data, {
+      headers: {
+        "Content-Type": "text/plain",
+        Accept: "application/json, text/plain, */*",
+      },
+    });
 
-  const getAccount = () => api.get('api/account')
-  const createUser = (options) => api.post('api/users', options)
-  const updateAccount = (account) => api.post('api/account', account)
+  const getAccount = () => api.get("api/account");
+  const createUser = (options) => api.post("api/users", options);
+  const updateAccount = (account) => api.post("api/account", account);
   const changePassword = (currentPassword, newPassword) =>
     api.post(
-      'api/account/change-password',
+      "api/account/change-password",
       { currentPassword, newPassword },
-      { headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/plain, */*' } },
-    )
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json, text/plain, */*",
+        },
+      }
+    );
 
-  const getNotification = (notificationId) => api.get('api/notifications/' + notificationId)
-  const getNotifications = (options) => api.get('api/notifications', options)
-  const createNotification = (notification) => api.post('api/notifications', notification)
-  const updateNotification = (notification) => api.put('api/notifications', notification)
-  const deleteNotification = (notificationId) => api.delete('api/notifications/' + notificationId)
+  const getNotification = (notificationId) =>
+    api.get("api/notifications/" + notificationId);
+  const getNotifications = (options) => api.get("api/notifications", options);
+  const createNotification = (notification) =>
+    api.post("api/notifications", notification);
+  const updateNotification = (notification) =>
+    api.put("api/notifications", notification);
+  const deleteNotification = (notificationId) =>
+    api.delete("api/notifications/" + notificationId);
 
-  const getRestaurant = (restaurantsId) => api.get('api/restaurants/' + restaurantsId)
-  const getRestaurants = (options) => api.get('api/restaurants', options)
-  const createRestaurant = (restaurants) => api.post('api/restaurants', restaurants)
-  const updateRestaurant = (restaurants) => api.put('api/restaurants', restaurants)
-  const deleteRestaurant = (restaurantsId) => api.delete('api/restaurants/' + restaurantsId)
+  const getRestaurant = (restaurantsId) =>
+    api.get("api/restaurants/" + restaurantsId);
+  const getRestaurants = (options) => api.get("api/restaurants", options);
+  const createRestaurant = (restaurants) =>
+    api.post("api/restaurants", restaurants);
+  const updateRestaurant = (restaurants) =>
+    api.put("api/restaurants", restaurants);
+  const deleteRestaurant = (restaurantsId) =>
+    api.delete("api/restaurants/" + restaurantsId);
 
-  const getFood = (foodsId) => api.get('api/foods/' + foodsId)
-  const getFoods = (options) => api.get('api/foods', options)
-  const createFood = (foods) => api.post('api/foods', foods)
-  const updateFood = (foods) => api.put('api/foods', foods)
-  const deleteFood = (foodsId) => api.delete('api/foods/' + foodsId)
+  const getFood = (foodsId) => api.get("api/foods/" + foodsId);
+  const getFoods = (options) => api.get("api/foods", options);
+  const createFood = (foods) => api.post("api/foods", foods);
+  const updateFood = (foods) => api.put("api/foods", foods);
+  const deleteFood = (foodsId) => api.delete("api/foods/" + foodsId);
+
+  const getDeal = (dealId) => api.get("api/deals/" + dealId);
+  const createDeal = (deal) => api.post("api/deals", deal);
 
   // ignite-jhipster-api-method-needle
 
@@ -93,7 +111,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
     getNotifications,
     getNotification,
     deleteNotification,
-    
+
     createRestaurant,
     updateRestaurant,
     getRestaurants,
@@ -105,6 +123,9 @@ const create = (baseURL = AppConfig.apiUrl) => {
     createFood,
     deleteFood,
     updateFood,
+
+    getDeal,
+    createDeal,
     // ignite-jhipster-api-export-needle
     login,
     createUser,
@@ -112,10 +133,10 @@ const create = (baseURL = AppConfig.apiUrl) => {
     getAccount,
     updateAccount,
     changePassword,
-  }
-}
+  };
+};
 
 // let's return back our create method as the default.
 export default {
   create,
-}
+};
