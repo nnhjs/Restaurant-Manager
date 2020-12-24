@@ -1,6 +1,10 @@
 import { all, takeLatest } from "redux-saga/effects";
 import { DealTypes } from "../../modules/entities/deal/deal.reducer";
-import { createDeal, getDeal } from "../../modules/entities/deal/deal.saga";
+import {
+  createDeal,
+  getDeal,
+  getDeals,
+} from "../../modules/entities/deal/deal.saga";
 import { FoodTypes } from "../../modules/entities/food/food.reducer";
 import { getFood, getFoods } from "../../modules/entities/food/food.saga";
 import { NotificationTypes } from "../../modules/entities/notification/notification.reducer";
@@ -65,6 +69,7 @@ export default function* root() {
     takeLatest(FoodTypes.FOOD_ALL_REQUEST, getFoods, api),
 
     takeLatest(DealTypes.DEAL_REQUEST, getDeal, api),
+    takeLatest(DealTypes.DEAL_ALL_REQUEST, getDeals, api),
     takeLatest(DealTypes.CREATE_DEAL_REQUEST, createDeal, api),
   ]);
 }

@@ -3,12 +3,20 @@ import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import DealActions from "../../modules/entities/deal/deal.reducer";
 import { images } from "../../share/images/images";
-import { converPrice } from "../../share/utils/convertPrice";
+import { convertPrice } from "../../share/utils/convertPrice";
 const CartScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { account } = useSelector((state) => state.login);
   const { carts } = useSelector((state) => state.carts);
-  console.log("carts", carts);
+  const convertCarts = [];
+  for (let cart of carts) {
+    if (convertCarts.map((item) => item._id).indexOf(cart._id) === -1) {
+      convertCarts.push({
+        ...cart,
+        total: carts.filter((ele) => ele._id === cart._id).length,
+      });
+    }
+  }
   const renderItem = ({ item }) => {
     return (
       <View
@@ -28,16 +36,11 @@ const CartScreen = ({ navigation }) => {
           />
           <View>
             <Text style={{ paddingBottom: 4 }}>{`${item?.name}`}</Text>
-            <Text>{`Giá: ${converPrice(item?.price)}`}</Text>
+            <Text>{`Giá: ${convertPrice(item?.price)}`}</Text>
           </View>
         </View>
-        <Text style={{ marginHorizontal: 6 }}>
-          {`x${carts.filter((ele) => ele._id === item._id)?.length || 0}`}
-        </Text>
-        <Text>{`${converPrice(
-          parseInt(item?.price) *
-            carts.filter((ele) => ele._id === item._id)?.length
-        )}`}</Text>
+        <Text style={{ marginHorizontal: 6 }}>{`x${item?.total || 0}`}</Text>
+        <Text>{`${convertPrice(parseInt(item?.price) * item.total)}`}</Text>
       </View>
     );
   };
@@ -81,7 +84,7 @@ const CartScreen = ({ navigation }) => {
 
   const ListFooterComponent = () => {
     return carts.length ? (
-      <View>
+      <View style={{ marginBottom: 16 }}>
         <View
           style={{
             flexDirection: "row",
@@ -94,7 +97,11 @@ const CartScreen = ({ navigation }) => {
             Tổng tiền:
           </Text>
           <Text style={{ color: "#61b15a", fontSize: 22 }}>
-            {converPrice(200000)}
+            {convertPrice(
+              convertCarts.reduce((acc, cur) => {
+                return acc + cur.total * cur.price;
+              }, 0)
+            )}
           </Text>
         </View>
         <TouchableOpacity
@@ -108,7 +115,11 @@ const CartScreen = ({ navigation }) => {
             dispatch(
               DealActions.createDealRequest({
                 id_account: account._id,
-                deal: carts,
+                deal: convertCarts,
+                totalPrice: convertCarts.reduce((acc, cur) => {
+                  return acc + cur.total * cur.price;
+                }, 0),
+                status: "pending",
               })
             );
           }}
@@ -133,7 +144,7 @@ const CartScreen = ({ navigation }) => {
       ListHeaderComponent={ListHeaderComponent}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
-      data={carts}
+      data={convertCarts}
       initialNumToRender={10}
       ListFooterComponent={ListFooterComponent}
       ListEmptyComponent={renderEmpty}

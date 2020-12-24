@@ -88,6 +88,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
   const deleteFood = (foodsId) => api.delete("api/foods/" + foodsId);
 
   const getDeal = (dealId) => api.get("api/deals/" + dealId);
+  const getDeals = (options) => api.get("api/deals", options);
   const createDeal = (deal) => api.post("api/deals", deal);
 
   // ignite-jhipster-api-method-needle
@@ -126,6 +127,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
 
     getDeal,
     createDeal,
+    getDeals,
     // ignite-jhipster-api-export-needle
     login,
     createUser,

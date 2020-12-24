@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CartActions from "../../modules/entities/cart/cart.reducer";
 import FoodActions from "../../modules/entities/food/food.reducer";
 import { images } from "../../share/images/images";
-import { converPrice } from "../../share/utils/convertPrice";
+import { convertPrice } from "../../share/utils/convertPrice";
 import styles from "./CardItemDetails.styles";
 
 const MIN_HEIGHT = Platform.OS === "ios" ? 90 : 55;
@@ -88,7 +88,7 @@ const CardItemDetails = ({ route }) => {
             >
               <View>
                 <Text style={{ paddingBottom: 24 }}>{`${item?.name}`}</Text>
-                <Text>{`${converPrice(item?.price)}`}</Text>
+                <Text>{`${convertPrice(item?.price)}`}</Text>
               </View>
               <Image
                 source={{ uri: item?.image }}

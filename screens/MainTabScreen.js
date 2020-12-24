@@ -1,7 +1,7 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { View } from "react-native-animatable";
+import { Text, View } from "react-native-animatable";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,6 +16,7 @@ import FastFoodScreen from "./fast-food-screen/FastFoodScreen";
 import FoodItemDetails from "./food-item-details/FoodItemDetail";
 import HomeScreen from "./home-screen/HomeScreen";
 import NotificationScreen from "./notification-screen/NotificationScreen";
+import OrderScreen from "./order-screen/OrderScreen";
 import ProfileScreen from "./profile-screen/ProfileScreen";
 
 const HomeStack = createStackNavigator();
@@ -114,15 +115,17 @@ const HomeStackScreen = ({ navigation }) => {
         options={{
           title: "Tìm kiếm đồ ăn",
           headerLeft: () => (
-            <View style={{ marginLeft: 10 }}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.openDrawer()}
+            >
               <Icon.Button
                 name="ios-menu"
                 size={25}
                 color={colors.text}
                 backgroundColor={colors.background}
-                onPress={() => navigation.openDrawer()}
               />
-            </View>
+            </TouchableOpacity>
           ),
           headerRight: () => (
             <View style={{ flexDirection: "row", marginRight: 10 }}>
@@ -210,12 +213,9 @@ const NotificationStackScreen = ({ navigation }) => (
       component={NotificationScreen}
       options={{
         headerLeft: () => (
-          <Icon.Button
-            name="ios-menu"
-            size={25}
-            backgroundColor="#1f65ff"
-            onPress={() => navigation.openDrawer()}
-          />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Icon.Button name="ios-menu" size={25} backgroundColor="#1f65ff" />
+          </TouchableOpacity>
         ),
       }}
     />
@@ -242,26 +242,30 @@ const ProfileStackScreen = ({ navigation }) => {
         options={{
           title: "",
           headerLeft: () => (
-            <View style={{ marginLeft: 10 }}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.openDrawer()}
+            >
               <Icon.Button
                 name="ios-menu"
                 size={25}
                 backgroundColor={colors.background}
                 color={colors.text}
-                onPress={() => navigation.openDrawer()}
               />
-            </View>
+            </TouchableOpacity>
           ),
           headerRight: () => (
-            <View style={{ marginRight: 10 }}>
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              onPress={() => navigation.navigate("EditProfile")}
+            >
               <MaterialCommunityIcons.Button
                 name="account-edit"
                 size={25}
                 backgroundColor={colors.background}
                 color={colors.text}
-                onPress={() => navigation.navigate("EditProfile")}
               />
-            </View>
+            </TouchableOpacity>
           ),
         }}
       />
@@ -278,7 +282,7 @@ const ProfileStackScreen = ({ navigation }) => {
 
 const CartStackScreen = ({ navigation }) => {
   const { colors } = useTheme();
-
+  const { deals } = useSelector((state) => state.deals);
   return (
     <CartStack.Navigator
       screenOptions={{
@@ -291,20 +295,74 @@ const CartStackScreen = ({ navigation }) => {
       }}
     >
       <CartStack.Screen
-        name="Cart"
+        name="CartScreen"
         component={CartScreen}
         options={{
           title: "Giỏ hàng",
           headerLeft: () => (
-            <View style={{ marginLeft: 10 }}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.openDrawer()}
+            >
               <Icon.Button
                 name="ios-menu"
                 size={25}
                 backgroundColor={colors.background}
                 color={colors.text}
-                onPress={() => navigation.openDrawer()}
               />
-            </View>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                navigation.navigate("OrderScreen");
+              }}
+            >
+              {/* <Badge
+                status="success"
+                value={3}
+                containerStyle={{ position: "absolute", top: -4, right: -4 }}
+              /> */}
+              <Text
+                style={{
+                  color: "red",
+                  position: "absolute",
+                  top: -4,
+                  right: -4,
+                  zIndex: 999,
+                  padding: 8,
+                }}
+              >
+                {deals.length}
+              </Text>
+              <Icon.Button
+                name="ios-basket"
+                size={25}
+                backgroundColor={colors.background}
+                color={colors.text}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <CartStack.Screen
+        name="OrderScreen"
+        component={OrderScreen}
+        options={{
+          title: "Danh sách đơn hàng",
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.openDrawer()}
+            >
+              <Icon.Button
+                name="ios-menu"
+                size={25}
+                backgroundColor={colors.background}
+                color={colors.text}
+              />
+            </TouchableOpacity>
           ),
         }}
       />

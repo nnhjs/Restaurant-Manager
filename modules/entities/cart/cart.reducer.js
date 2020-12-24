@@ -6,6 +6,7 @@ import Immutable from "seamless-immutable";
 const { Types, Creators } = createActions({
   cartAdd: ["item"],
   cartSubtract: ["item"],
+  cartReset: [],
 });
 
 export const CartTypes = Types;
@@ -49,4 +50,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CART_ADD]: add,
 
   [Types.CART_SUBTRACT]: subtract,
+
+  [Types.CART_RESET]: reset,
 });

@@ -15,6 +15,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import StarRating from "../../components/StarRating";
+import DealActions from "../../modules/entities/deal/deal.reducer";
 import RestaurantActions from "../../modules/entities/restaurant/restaurant.reducer";
 import { images } from "../../share/images/images";
 import styles from "./HomeScreen.styles";
@@ -44,8 +45,10 @@ const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { restaurants } = useSelector((state) => state.restaurants);
+  const { account } = useSelector((state) => state.login);
   useEffect(() => {
     dispatch(RestaurantActions.restaurantAllRequest());
+    dispatch(DealActions.dealAllRequest({ id_account: account?._id }));
   }, []);
   return (
     <ScrollView style={styles.container}>
