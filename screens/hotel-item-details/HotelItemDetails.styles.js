@@ -75,7 +75,7 @@ export default StyleSheet.create({
     fontSize: 18,
     backgroundColor: "transparent",
   },
-  // sectionLarge: {
-  //   minHeight: 1,
-  // },
+  sectionLarge: {
+    minHeight: 100,
+  },
 });

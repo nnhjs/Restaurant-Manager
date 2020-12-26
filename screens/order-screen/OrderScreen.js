@@ -6,8 +6,10 @@ import {
   convertColorStatus,
   convertTextStatus,
 } from "../../share/utils/convertStatus";
+import { formart } from "../../share/utils/formartTime";
 const OrderScreen = () => {
   const { deals } = useSelector((state) => state.deals);
+  console.log("deals", deals);
   const renderItem = ({ item, index }) => {
     return (
       <View
@@ -18,7 +20,7 @@ const OrderScreen = () => {
           paddingVertical: 12,
         }}
       >
-        <Text style={{ color: "#666" }}>04, Dec 13:41</Text>
+        <Text style={{ color: "#666" }}>{formart(item?.created)}</Text>
         <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 6 }}>
           {`Đơn hàng thứ ${index + 1} `}
         </Text>

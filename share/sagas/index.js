@@ -7,6 +7,8 @@ import {
 } from "../../modules/entities/deal/deal.saga";
 import { FoodTypes } from "../../modules/entities/food/food.reducer";
 import { getFood, getFoods } from "../../modules/entities/food/food.saga";
+import { HotelTypes } from "../../modules/entities/hotel/hotel.reducer";
+import { getHotel, getHotels } from "../../modules/entities/hotel/hotel.sagas";
 import { NotificationTypes } from "../../modules/entities/notification/notification.reducer";
 import {
   deleteNotification,
@@ -67,6 +69,9 @@ export default function* root() {
 
     takeLatest(FoodTypes.FOOD_REQUEST, getFood, api),
     takeLatest(FoodTypes.FOOD_ALL_REQUEST, getFoods, api),
+
+    takeLatest(HotelTypes.HOTEL_REQUEST, getHotel, api),
+    takeLatest(HotelTypes.HOTEL_ALL_REQUEST, getHotels, api),
 
     takeLatest(DealTypes.DEAL_REQUEST, getDeal, api),
     takeLatest(DealTypes.DEAL_ALL_REQUEST, getDeals, api),

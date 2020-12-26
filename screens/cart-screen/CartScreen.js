@@ -1,10 +1,21 @@
-import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Image,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { AuthContext } from "../../components/context";
 import DealActions from "../../modules/entities/deal/deal.reducer";
 import { images } from "../../share/images/images";
 import { convertPrice } from "../../share/utils/convertPrice";
+import styles from "./CartScreen.styles";
 const CartScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const { signOut } = React.useContext(AuthContext);
   const dispatch = useDispatch();
   const { account } = useSelector((state) => state.login);
   const { carts } = useSelector((state) => state.carts);
@@ -85,6 +96,51 @@ const CartScreen = ({ navigation }) => {
   const ListFooterComponent = () => {
     return carts.length ? (
       <View style={{ marginBottom: 16 }}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                Tôi đồng ý với mọi điều khoản, tiếp tục mua hàng
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ ...styles.openButton, backgroundColor: "#61b15a" }}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={styles.textStyle}>Trở lại</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ ...styles.openButton, backgroundColor: "#61b15a" }}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    dispatch(
+                      DealActions.createDealRequest({
+                        id_account: account._id,
+                        deal: convertCarts,
+                        totalPrice: convertCarts.reduce((acc, cur) => {
+                          return acc + cur.total * cur.price;
+                        }, 0),
+                        status: "pending",
+                        created: new Date(),
+                      })
+                    );
+                  }}
+                >
+                  <Text style={styles.textStyle}>Đồng ý</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         <View
           style={{
             flexDirection: "row",
@@ -112,16 +168,7 @@ const CartScreen = ({ navigation }) => {
             marginTop: 32,
           }}
           onPress={() => {
-            dispatch(
-              DealActions.createDealRequest({
-                id_account: account._id,
-                deal: convertCarts,
-                totalPrice: convertCarts.reduce((acc, cur) => {
-                  return acc + cur.total * cur.price;
-                }, 0),
-                status: "pending",
-              })
-            );
+            account ? setModalVisible(true) : signOut();
           }}
         >
           <Text

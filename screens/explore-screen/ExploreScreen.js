@@ -1,30 +1,24 @@
-import React, { useEffect } from 'react';
+import { useNavigation, useTheme } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
+  Animated,
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
   Text,
   TextInput,
-  View,
-  ScrollView,
-  Animated,
-  Image,
   TouchableOpacity,
-  Dimensions,
-  Platform,
+  View,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native'
-import { useSelector, useDispatch } from 'react-redux'
-import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-
-import { mapDarkStyle, mapStandardStyle } from '../../model/mapData';
-import StarRating from '../../components/StarRating';
-
-import { useTheme } from '@react-navigation/native';
-
-import styles from './ExploreScreen.styles'
-import { images } from '../../share/images/images'
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import StarRating from "../../components/StarRating";
+import { mapDarkStyle, mapStandardStyle } from "../../model/mapData";
+import { images } from "../../share/images/images";
+import styles from "./ExploreScreen.styles";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
@@ -35,35 +29,108 @@ const ExploreScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const restaurants = useSelector(state => state?.restaurants?.restaurants?.data) 
+  const [options, setOptions] = useState(1);
+  const restaurants = useSelector(
+    (state) => state?.restaurants?.restaurants?.data
+  );
+  const hotels = useSelector((state) => state?.hotels?.hotels?.data);
   const initialMapState = {
-    restaurants,
+    id: 1,
+    restaurants: restaurants,
     categories: [
-      { 
-        name: 'Quán ăn nhanh',
-        icon: <MaterialCommunityIcons style={styles.chipsIcon} name="food-fork-drink" size={18} />,
-      },
+      // {
+      //   name: "Quán ăn nhanh",
+      //   icon: (
+      //     <MaterialCommunityIcons
+      //       style={styles.chipsIcon}
+      //       name="food-fork-drink"
+      //       size={18}
+      //     />
+      //   ),
+      // },
       {
-        name: 'Nhà hàng',
-        icon: <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />,
+        id: 1,
+        name: "Nhà hàng",
+        icon: (
+          <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />
+        ),
       },
+      // {
+      //   name: "Quán ăn tối",
+      //   icon: (
+      //     <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />
+      //   ),
+      // },
+      // {
+      //   name: "Đồ ăn vặt",
+      //   icon: (
+      //     <MaterialCommunityIcons
+      //       name="food"
+      //       style={styles.chipsIcon}
+      //       size={18}
+      //     />
+      //   ),
+      // },
       {
-        name: 'Quán ăn tối',
-        icon: <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />,
-      },
-      {
-        name: 'Đồ ăn vặt',
-        icon: <MaterialCommunityIcons name="food" style={styles.chipsIcon} size={18} />,
-      },
-      {
-        name: 'Khách sạn',
+        id: 2,
+        name: "Khách sạn",
         icon: <Fontisto name="hotel" style={styles.chipsIcon} size={15} />,
       },
-  ],
+    ],
     region: {
       latitude: 21.027763,
-      longitude: 105.834160,
+      longitude: 105.83416,
+      latitudeDelta: 0.04864195044303443,
+      longitudeDelta: 0.040142817690068,
+    },
+  };
+
+  const initialMapStateHotel = {
+    id: 2,
+    restaurants: hotels,
+    categories: [
+      // {
+      //   name: "Quán ăn nhanh",
+      //   icon: (
+      //     <MaterialCommunityIcons
+      //       style={styles.chipsIcon}
+      //       name="food-fork-drink"
+      //       size={18}
+      //     />
+      //   ),
+      // },
+      {
+        id: 1,
+        name: "Nhà hàng",
+        icon: (
+          <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />
+        ),
+      },
+      // {
+      //   name: "Quán ăn tối",
+      //   icon: (
+      //     <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />
+      //   ),
+      // },
+      // {
+      //   name: "Đồ ăn vặt",
+      //   icon: (
+      //     <MaterialCommunityIcons
+      //       name="food"
+      //       style={styles.chipsIcon}
+      //       size={18}
+      //     />
+      //   ),
+      // },
+      {
+        id: 2,
+        name: "Khách sạn",
+        icon: <Fontisto name="hotel" style={styles.chipsIcon} size={15} />,
+      },
+    ],
+    region: {
+      latitude: 21.027763,
+      longitude: 105.83416,
       latitudeDelta: 0.04864195044303443,
       longitudeDelta: 0.040142817690068,
     },
@@ -87,7 +154,7 @@ const ExploreScreen = () => {
       clearTimeout(regionTimeout);
 
       const regionTimeout = setTimeout(() => {
-        if( mapIndex !== index ) {
+        if (mapIndex !== index) {
           mapIndex = index;
           const { coordinate } = state.restaurants[index];
           _map.current.animateToRegion(
@@ -107,13 +174,13 @@ const ExploreScreen = () => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
-      ((index + 1) * CARD_WIDTH),
+      (index + 1) * CARD_WIDTH,
     ];
 
     const scale = mapAnimation.interpolate({
       inputRange,
       outputRange: [1, 1.5, 1],
-      extrapolate: "clamp"
+      extrapolate: "clamp",
     });
 
     return { scale };
@@ -122,13 +189,13 @@ const ExploreScreen = () => {
   const onMarkerPress = (mapEventData) => {
     const markerID = mapEventData._targetInst.return.key;
 
-    let x = (markerID * CARD_WIDTH) + (markerID * 20); 
-    if (Platform.OS === 'ios') {
+    let x = markerID * CARD_WIDTH + markerID * 20;
+    if (Platform.OS === "ios") {
       x = x - SPACING_FOR_CARD_INSET;
     }
 
-    _scrollView.current.scrollTo({x: x, y: 0, animated: true});
-  }
+    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
+  };
 
   const _map = React.useRef(null);
   const _scrollView = React.useRef(null);
@@ -151,7 +218,11 @@ const ExploreScreen = () => {
           //   ],
           // };
           return (
-            <MapView.Marker key={index} coordinate={marker.coordinate} onPress={(e)=>onMarkerPress(e)}>
+            <MapView.Marker
+              key={index}
+              coordinate={marker.coordinate}
+              onPress={(e) => onMarkerPress(e)}
+            >
               <Animated.View style={[styles.markerWrap]}>
                 <Animated.Image
                   source={images.mapMarker}
@@ -165,11 +236,11 @@ const ExploreScreen = () => {
         })}
       </MapView>
       <View style={styles.searchBox}>
-        <TextInput 
-          placeholder="Search here"
+        <TextInput
+          placeholder="Tìm kiếm"
           placeholderTextColor="#000"
           autoCapitalize="none"
-          style={{flex:1,padding:0}}
+          style={{ flex: 1, padding: 0 }}
         />
         <Ionicons name="ios-search" size={20} />
       </View>
@@ -179,18 +250,27 @@ const ExploreScreen = () => {
         showsHorizontalScrollIndicator={false}
         height={50}
         style={styles.chipsScrollView}
-        contentInset={{ // iOS only
-          top:0,
-          left:0,
-          bottom:0,
-          right:20
+        contentInset={{
+          // iOS only
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 20,
         }}
         contentContainerStyle={{
-          paddingRight: Platform.OS === 'android' ? 20 : 0
+          paddingRight: Platform.OS === "android" ? 20 : 0,
         }}
       >
         {state.categories.map((category, index) => (
-          <TouchableOpacity key={index} style={styles.chipsItem}>
+          <TouchableOpacity
+            key={index}
+            style={styles.chipsItem}
+            onPress={() => {
+              category.id === 1
+                ? setState(initialMapState)
+                : setState(initialMapStateHotel);
+            }}
+          >
             {category.icon}
             <Text>{category.name}</Text>
           </TouchableOpacity>
@@ -209,10 +289,11 @@ const ExploreScreen = () => {
           top: 0,
           left: SPACING_FOR_CARD_INSET,
           bottom: 0,
-          right: SPACING_FOR_CARD_INSET
+          right: SPACING_FOR_CARD_INSET,
         }}
         contentContainerStyle={{
-          paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
+          paddingHorizontal:
+            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
         }}
         onScroll={Animated.event(
           [
@@ -220,37 +301,56 @@ const ExploreScreen = () => {
               nativeEvent: {
                 contentOffset: {
                   x: mapAnimation,
-                }
+                },
               },
             },
           ],
-          {useNativeDriver: true}
+          { useNativeDriver: true }
         )}
       >
-        {state.restaurants.map((marker, index) =>(
+        {state.restaurants.map((marker, index) => (
           <View style={styles.card} key={index}>
-            <Image 
-              source={{uri: marker.image}}
+            <Image
+              source={{ uri: marker.image }}
               style={styles.cardImage}
               resizeMode="cover"
             />
             <View style={styles.textContent}>
-              <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}</Text>
+              <Text numberOfLines={1} style={styles.cardtitle}>
+                {marker.title}
+              </Text>
               <StarRating ratings={marker.rating} reviews={marker.reviews} />
-              <Text numberOfLines={1} style={styles.cardDescription}>{marker.description}</Text>
+              <Text numberOfLines={1} style={styles.cardDescription}>
+                {marker.description}
+              </Text>
               <View style={styles.button}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('CardItemDetails', {itemData: marker})
+                    navigation.navigate(
+                      state.id === 1 ? "CardItemDetails" : "HotelItemScreen",
+                      {
+                        itemData: marker,
+                      }
+                    );
                   }}
-                  style={[styles.signIn, {
-                    borderColor: '#FF6347',
-                    borderWidth: 1
-                  }]}
+                  style={[
+                    styles.signIn,
+                    {
+                      borderColor: "#FF6347",
+                      borderWidth: 1,
+                    },
+                  ]}
                 >
-                  <Text style={[styles.textSign, {
-                    color: '#FF6347'
-                  }]}>Đặt ngay</Text>
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        color: "#FF6347",
+                      },
+                    ]}
+                  >
+                    Đặt ngay
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

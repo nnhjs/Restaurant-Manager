@@ -16,13 +16,19 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from "react-redux";
 import StarRating from "../../components/StarRating";
 import DealActions from "../../modules/entities/deal/deal.reducer";
+import HotelActions from "../../modules/entities/hotel/hotel.reducer";
 import RestaurantActions from "../../modules/entities/restaurant/restaurant.reducer";
 import { images } from "../../share/images/images";
 import styles from "./HomeScreen.styles";
 
-const RenderItem = ({ item }) => {
+const RenderItem = ({ item, navigation }) => {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => {
+        navigation.navigate("CardItemDetails", { itemData: item });
+      }}
+    >
       <View style={styles.cardImgWrapper}>
         <Image
           source={{ uri: item?.image }}
@@ -37,7 +43,7 @@ const RenderItem = ({ item }) => {
           {`${item.description}`}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -49,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     dispatch(RestaurantActions.restaurantAllRequest());
     dispatch(DealActions.dealAllRequest({ id_account: account?._id }));
+    dispatch(HotelActions.hotelAllRequest());
   }, []);
   return (
     <ScrollView style={styles.container}>
@@ -130,7 +137,14 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={[styles.categoryContainer, { marginTop: 10 }]}>
-        <TouchableOpacity style={styles.categoryBtn} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.categoryBtn}
+          onPress={() =>
+            navigation.navigate("HotelListScreen", {
+              title: "Khách sạn",
+            })
+          }
+        >
           <View style={styles.categoryIcon}>
             <Fontisto name="hotel" size={35} color="#FF6347" />
           </View>
@@ -162,8 +176,10 @@ const HomeScreen = ({ navigation }) => {
           Nổi bật
         </Text>
         {restaurants?.data?.length > 0
-          ? restaurants?.data?.slice(0, 3).map((item, index) => {
-              return <RenderItem item={item} key={index} />;
+          ? restaurants?.data?.slice(0, 5).map((item, index) => {
+              return (
+                <RenderItem item={item} key={index} navigation={navigation} />
+              );
             })
           : null}
       </View>

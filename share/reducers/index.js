@@ -12,6 +12,7 @@ export const reducers = combineReducers({
   restaurants: require("../../modules/entities/restaurant/restaurant.reducer")
     .reducer,
   foods: require("../../modules/entities/food/food.reducer").reducer,
+  hotels: require("../../modules/entities/hotel/hotel.reducer").reducer,
   carts: require("../../modules/entities/cart/cart.reducer").reducer,
   deals: require("../../modules/entities/deal/deal.reducer").reducer,
 });

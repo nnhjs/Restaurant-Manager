@@ -1,25 +1,30 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { convertPrice } from "../share/utils/convertPrice";
+import StarRating from "./StarRating";
 
-import StarRating from './StarRating';
-import { converPrice } from '../share/utils/convertPrice'
-
-const Food = ({itemData, onPress}) => {
+const Food = ({ itemData, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
         <View style={styles.cardImgWrapper}>
           <Image
-            source={{uri: itemData.image}}
+            source={{ uri: itemData.image }}
             resizeMode="cover"
             style={styles.cardImg}
           />
         </View>
         <View style={styles.cardInfo}>
-          <Text style={styles.cardTitle}>{itemData?.title || itemData?.name}</Text>
+          <Text style={styles.cardTitle}>
+            {itemData?.title || itemData?.name}
+          </Text>
           <StarRating ratings={itemData.ratings} reviews={itemData.reviews} />
-          <Text numberOfLines={1} style={styles.cardDetails}>{itemData.description}</Text>
-          <Text numberOfLines={1} style={styles.price}>{`Price: ${converPrice(itemData.price)}`}</Text>
+          <Text numberOfLines={1} style={styles.cardDetails}>
+            {itemData.description}
+          </Text>
+          <Text numberOfLines={1} style={styles.price}>{`Price: ${convertPrice(
+            itemData.price
+          )}`}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -32,9 +37,9 @@ const styles = StyleSheet.create({
   card: {
     height: 100,
     marginVertical: 10,
-    flexDirection: 'row',
-    shadowColor: '#999',
-    shadowOffset: {width: 0, height: 1},
+    flexDirection: "row",
+    shadowColor: "#999",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
@@ -43,9 +48,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardImg: {
-    height: '100%',
-    width: '100%',
-    alignSelf: 'center',
+    height: "100%",
+    width: "100%",
+    alignSelf: "center",
     borderRadius: 8,
     borderBottomRightRadius: 0,
     borderTopRightRadius: 0,
@@ -53,23 +58,23 @@ const styles = StyleSheet.create({
   cardInfo: {
     flex: 2,
     padding: 10,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   cardTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   cardDetails: {
     fontSize: 12,
-    color: '#444',
+    color: "#444",
     flex: 1,
   },
   price: {
     fontSize: 12,
-    color: '#444',
+    color: "#444",
   },
 });

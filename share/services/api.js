@@ -83,9 +83,16 @@ const create = (baseURL = AppConfig.apiUrl) => {
 
   const getFood = (foodsId) => api.get("api/foods/" + foodsId);
   const getFoods = (options) => api.get("api/foods", options);
+  const getFoodsFind = (options) => api.get("api/foods/find", options);
   const createFood = (foods) => api.post("api/foods", foods);
   const updateFood = (foods) => api.put("api/foods", foods);
   const deleteFood = (foodsId) => api.delete("api/foods/" + foodsId);
+
+  const getHotel = (hotelsId) => api.get("api/hotels/" + hotelsId);
+  const getHotels = (options) => api.get("api/hotels", options);
+  const createHotel = (hotels) => api.post("api/hotels", hotels);
+  const updateHotel = (hotels) => api.put("api/hotels", hotels);
+  const deleteHotel = (hotelsId) => api.delete("api/hotels/" + hotelsId);
 
   const getDeal = (dealId) => api.get("api/deals/" + dealId);
   const getDeals = (options) => api.get("api/deals", options);
@@ -121,9 +128,16 @@ const create = (baseURL = AppConfig.apiUrl) => {
 
     getFood,
     getFoods,
+    getFoodsFind,
     createFood,
     deleteFood,
     updateFood,
+
+    getHotel,
+    getHotels,
+    createHotel,
+    deleteHotel,
+    updateHotel,
 
     getDeal,
     createDeal,

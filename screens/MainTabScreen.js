@@ -13,8 +13,11 @@ import CartScreen from "./cart-screen/CartScreen";
 import EditProfileScreen from "./edit-profile-screen/EditProfileScreen";
 import ExploreScreen from "./explore-screen/ExploreScreen";
 import FastFoodScreen from "./fast-food-screen/FastFoodScreen";
+import FindFoodScreen from "./find-food-screen/FindFoodScreen";
 import FoodItemDetails from "./food-item-details/FoodItemDetail";
 import HomeScreen from "./home-screen/HomeScreen";
+import HotelItemScreen from "./hotel-item-details/HotelItemDetails";
+import HotelListScreen from "./hotels-screen/HotelListScreen";
 import NotificationScreen from "./notification-screen/NotificationScreen";
 import OrderScreen from "./order-screen/OrderScreen";
 import ProfileScreen from "./profile-screen/ProfileScreen";
@@ -129,13 +132,20 @@ const HomeStackScreen = ({ navigation }) => {
           ),
           headerRight: () => (
             <View style={{ flexDirection: "row", marginRight: 10 }}>
-              <Icon.Button
-                name="ios-search"
-                size={25}
-                color={colors.text}
-                backgroundColor={colors.background}
-                onPress={() => {}}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("FindFoodScreen", {
+                    title: "Tìm kiếm đồ ăn",
+                  });
+                }}
+              >
+                <Icon.Button
+                  name="ios-search"
+                  size={25}
+                  color={colors.text}
+                  backgroundColor={colors.background}
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={{ paddingHorizontal: 10, marginTop: 5 }}
                 onPress={() => {
@@ -185,11 +195,39 @@ const HomeStackScreen = ({ navigation }) => {
         name="FoodItemDetails"
         component={FoodItemDetails}
         options={({ route }) => ({
+          title: route.params.title,
+          headerBackTitleVisible: false,
+          headerTitle: false,
+          headerTransparent: true,
+          headerTintColor: "#fff",
+        })}
+      />
+      <HomeStack.Screen
+        name="HotelListScreen"
+        component={HotelListScreen}
+        options={({ route }) => ({
+          title: route.params.title,
+          headerBackTitleVisible: false,
+        })}
+      />
+      <HomeStack.Screen
+        name="HotelItemScreen"
+        component={HotelItemScreen}
+        options={({ route }) => ({
           // title: route.params.title,
           headerBackTitleVisible: false,
           headerTitle: false,
           headerTransparent: true,
           headerTintColor: "#fff",
+        })}
+      />
+      <HomeStack.Screen
+        name="FindFoodScreen"
+        component={FindFoodScreen}
+        options={({ route }) => ({
+          // title: route.params.title,
+          title: route.params.title,
+          headerBackTitleVisible: false,
         })}
       />
     </HomeStack.Navigator>
@@ -209,7 +247,7 @@ const NotificationStackScreen = ({ navigation }) => (
     }}
   >
     <NotificationStack.Screen
-      name="Notifications"
+      name="Thông báo"
       component={NotificationScreen}
       options={{
         headerLeft: () => (

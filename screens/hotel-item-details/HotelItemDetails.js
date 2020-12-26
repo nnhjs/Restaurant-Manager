@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import {
   Image,
   Platform,
@@ -13,25 +13,18 @@ import HeaderImageScrollView, {
 } from "react-native-image-header-scroll-view";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useDispatch, useSelector } from "react-redux";
-import CartActions from "../../modules/entities/cart/cart.reducer";
-import FoodActions from "../../modules/entities/food/food.reducer";
+import { useDispatch } from "react-redux";
 import { images } from "../../share/images/images";
 import { convertPrice } from "../../share/utils/convertPrice";
-import styles from "./CardItemDetails.styles";
+import styles from "./HotelItemDetails.styles";
 
 const MIN_HEIGHT = Platform.OS === "ios" ? 90 : 55;
 const MAX_HEIGHT = 350;
 
-const CardItemDetails = ({ route }) => {
+const HotelItemDetails = ({ route }) => {
   const dispatch = useDispatch();
   const itemData = route.params.itemData;
   const navTitleView = useRef(null);
-  const { foods } = useSelector((state) => state.foods);
-  const { carts } = useSelector((state) => state.carts);
-  useEffect(() => {
-    dispatch(FoodActions.foodAllRequest({ id_restaurant: itemData._id }));
-  }, []);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -73,57 +66,6 @@ const CardItemDetails = ({ route }) => {
         <View style={[styles.section, styles.sectionLarge]}>
           <Text style={styles.sectionContent}>{itemData.description}</Text>
         </View>
-        {foods?.data.map((item) => {
-          return (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-                paddingHorizontal: 16,
-                paddingVertical: 24,
-                alignItems: "center",
-              }}
-              key={item._id}
-            >
-              <View>
-                <Text style={{ paddingBottom: 24 }}>{`${item?.name}`}</Text>
-                <Text>{`${convertPrice(item?.price)}`}</Text>
-              </View>
-              <Image
-                source={{ uri: item?.image }}
-                style={{ width: 100, height: 100, borderRadius: 5 }}
-              />
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(CartActions.cartSubtract(item));
-                  }}
-                  disabled={
-                    !carts.filter((ele) => ele._id === item._id)?.length
-                  }
-                >
-                  <Image
-                    source={images.subtract}
-                    style={{ width: 40, height: 40 }}
-                  />
-                </TouchableOpacity>
-                <Text style={{ marginHorizontal: 6 }}>
-                  {carts.filter((ele) => ele._id === item._id)?.length || 0}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(CartActions.cartAdd(item));
-                  }}
-                >
-                  <Image
-                    source={images.add}
-                    style={{ width: 40, height: 40 }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        })}
         <View style={styles.section}>
           <View style={styles.categories}>
             {itemData.categories.map((category, index) => (
@@ -134,7 +76,39 @@ const CardItemDetails = ({ route }) => {
             ))}
           </View>
         </View>
-
+        <View
+          style={{
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor: "red",
+            marginTop: 20,
+            marginHorizontal: 20,
+          }}
+        >
+          <Text
+            style={{ textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+          >
+            {convertPrice(itemData?.price)}/đêm
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            paddingVertical: 10,
+            borderWidth: 1,
+            borderColor: "red",
+            marginTop: 20,
+            marginHorizontal: 20,
+          }}
+          onPress={() => {
+            alert("booking");
+          }}
+        >
+          <Text
+            style={{ textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+          >
+            Đặt phòng ngay
+          </Text>
+        </TouchableOpacity>
         <View style={[styles.section, { height: 250 }]}>
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -157,4 +131,4 @@ const CardItemDetails = ({ route }) => {
   );
 };
 
-export default CardItemDetails;
+export default HotelItemDetails;
