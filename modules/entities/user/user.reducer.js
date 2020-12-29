@@ -7,7 +7,7 @@ const { Types, Creators } = createActions({
   userRequest: ['userId'],
   userAllRequest: ['options'],
   userCreateRequest: ['options'],
-  userUpdateRequest: ['user'],
+  userUpdateRequest: ['id', 'user'],
   userDeleteRequest: ['userId'],
 
   userSuccess: ['user'],

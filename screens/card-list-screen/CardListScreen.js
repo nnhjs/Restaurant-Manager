@@ -3,8 +3,11 @@ import { FlatList, View } from "react-native";
 import { useSelector } from "react-redux";
 import Card from "../../components/Card";
 import styles from "./CardListScreen.styles";
+import { useRoute } from '@react-navigation/native'
 
 const CardListScreen = ({ navigation }) => {
+  const route = useRoute()
+  const type = route.params?.type;
   const { restaurants } = useSelector((state) => state.restaurants);
   const renderItem = ({ item }) => {
     return (
@@ -20,7 +23,7 @@ const CardListScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={restaurants?.data}
+        data={type ? restaurants?.data.filter((item) => item.type === "restaurantNight") : restaurants?.data}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
       />

@@ -10,7 +10,6 @@ export function* getHotel(api, action) {
 
   // success?
   if (response.ok) {
-    console.log(response);
     yield put(HotelActions.hotelSuccess(response.data));
   } else {
     yield put(HotelActions.hotelFailure(response.data));
@@ -19,14 +18,12 @@ export function* getHotel(api, action) {
 
 export function* getHotels(api, action) {
   const { options } = action;
-  // console.log('options', options)
   // make the call to the api
   const apiCall = call(api.getHotels, options);
   const response = yield call(callApi, apiCall);
 
   // success?
   if (response.ok) {
-    // console.log('response: ', response);
     yield put(HotelActions.hotelAllSuccess(response.data));
   } else {
     yield put(HotelActions.hotelAllFailure(response.data));

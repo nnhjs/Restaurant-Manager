@@ -92,7 +92,7 @@ export function DrawerContent(props) {
               )}
               label="Cài đặt"
               onPress={() => {
-                props.navigation.navigate("SettingScreen");
+                props.navigation.navigate("SettingsScreen");
               }}
             />
             <DrawerItem

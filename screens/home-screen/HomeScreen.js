@@ -150,7 +150,10 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <Text style={styles.categoryBtnTxt}>Khách sạn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.categoryBtn} onPress={() => {}}>
+        <TouchableOpacity style={styles.categoryBtn} 
+          onPress={() =>
+            navigation.navigate("CardListScreen", { title: "Quán ăn tối", type: "restaurantNight" })
+          }>
           <View style={styles.categoryIcon}>
             <Ionicons name="md-restaurant" size={35} color="#FF6347" />
           </View>

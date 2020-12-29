@@ -1,15 +1,17 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { convertPrice } from "../../share/utils/convertPrice";
 import {
   convertColorStatus,
   convertTextStatus,
 } from "../../share/utils/convertStatus";
 import { formart } from "../../share/utils/formartTime";
+import DealActions from "../../modules/entities/deal/deal.reducer";
 const OrderScreen = () => {
+  const dispatch = useDispatch()
   const { deals } = useSelector((state) => state.deals);
-  console.log("deals", deals);
+  const { account } = useSelector((state) => state.login);
   const renderItem = ({ item, index }) => {
     return (
       <View
@@ -58,6 +60,10 @@ const OrderScreen = () => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={ListHeaderComponent}
+        refreshing={false}
+        onRefresh={() => {
+          dispatch(DealActions.dealAllRequest({ id_account: account?._id }));
+        }}
       />
     </View>
   );

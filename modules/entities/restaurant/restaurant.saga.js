@@ -10,7 +10,6 @@ export function* getRestaurant(api, action) {
 
   // success?
   if (response.ok) {
-    console.log(response)
     yield put(RestaurantActions.restaurantSuccess(response.data))
   } else {
     yield put(RestaurantActions.restaurantFailure(response.data))
@@ -19,14 +18,12 @@ export function* getRestaurant(api, action) {
 
 export function* getRestaurants(api, action) {
   const { options } = action
-  // console.log('options', options)
   // make the call to the api
   const apiCall = call(api.getRestaurants, options)
   const response = yield call(callApi, apiCall)
 
   // success?
   if (response.ok) {
-    // console.log('response: ', response);
     yield put(RestaurantActions.restaurantAllSuccess(response.data))
   } else {
     yield put(RestaurantActions.restaurantAllFailure(response.data))

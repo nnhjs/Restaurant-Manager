@@ -77,7 +77,6 @@ export const success = (state, action) => {
 // successful api lookup for all entities
 export const allSuccess = (state, action) => {
   const { notifications } = action
-  console.log('notifications:', notifications)
   return state.merge({
     fetchingAll: false,
     errorAll: null,

@@ -99,7 +99,7 @@ const ProfileScreen = () => {
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#FF6347" size={25} />
+            <Icon name="credit-card-clock" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>Thanh toán</Text>
           </View>
         </TouchableRipple>

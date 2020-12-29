@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import * as Location from 'expo-location';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,25 +30,15 @@ const ExploreScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [options, setOptions] = useState(1);
   const restaurants = useSelector(
     (state) => state?.restaurants?.restaurants?.data
   );
   const hotels = useSelector((state) => state?.hotels?.hotels?.data);
+  const [location, setLocation] = useState(null);
   const initialMapState = {
     id: 1,
     restaurants: restaurants,
     categories: [
-      // {
-      //   name: "Quán ăn nhanh",
-      //   icon: (
-      //     <MaterialCommunityIcons
-      //       style={styles.chipsIcon}
-      //       name="food-fork-drink"
-      //       size={18}
-      //     />
-      //   ),
-      // },
       {
         id: 1,
         name: "Nhà hàng",
@@ -55,22 +46,6 @@ const ExploreScreen = () => {
           <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />
         ),
       },
-      // {
-      //   name: "Quán ăn tối",
-      //   icon: (
-      //     <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />
-      //   ),
-      // },
-      // {
-      //   name: "Đồ ăn vặt",
-      //   icon: (
-      //     <MaterialCommunityIcons
-      //       name="food"
-      //       style={styles.chipsIcon}
-      //       size={18}
-      //     />
-      //   ),
-      // },
       {
         id: 2,
         name: "Khách sạn",
@@ -78,8 +53,8 @@ const ExploreScreen = () => {
       },
     ],
     region: {
-      latitude: 21.027763,
-      longitude: 105.83416,
+      latitude: location?.coords.latitude,
+      longitude: location?.coords.longitude,
       latitudeDelta: 0.04864195044303443,
       longitudeDelta: 0.040142817690068,
     },
@@ -89,16 +64,6 @@ const ExploreScreen = () => {
     id: 2,
     restaurants: hotels,
     categories: [
-      // {
-      //   name: "Quán ăn nhanh",
-      //   icon: (
-      //     <MaterialCommunityIcons
-      //       style={styles.chipsIcon}
-      //       name="food-fork-drink"
-      //       size={18}
-      //     />
-      //   ),
-      // },
       {
         id: 1,
         name: "Nhà hàng",
@@ -106,22 +71,6 @@ const ExploreScreen = () => {
           <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18} />
         ),
       },
-      // {
-      //   name: "Quán ăn tối",
-      //   icon: (
-      //     <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18} />
-      //   ),
-      // },
-      // {
-      //   name: "Đồ ăn vặt",
-      //   icon: (
-      //     <MaterialCommunityIcons
-      //       name="food"
-      //       style={styles.chipsIcon}
-      //       size={18}
-      //     />
-      //   ),
-      // },
       {
         id: 2,
         name: "Khách sạn",
@@ -129,14 +78,15 @@ const ExploreScreen = () => {
       },
     ],
     region: {
-      latitude: 21.027763,
-      longitude: 105.83416,
+      latitude: location?.coords.latitude,
+      longitude: location?.coords.longitude,
       latitudeDelta: 0.04864195044303443,
       longitudeDelta: 0.040142817690068,
     },
   };
 
   const [state, setState] = React.useState(initialMapState);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   let mapIndex = 0;
   let mapAnimation = new Animated.Value(0);
@@ -169,6 +119,19 @@ const ExploreScreen = () => {
       }, 10);
     });
   });
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
   const interpolations = state.restaurants.map((marker, index) => {
     const inputRange = [
@@ -210,13 +173,16 @@ const ExploreScreen = () => {
         customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
       >
         {state.restaurants.map((marker, index) => {
-          // const scaleStyle = {
-          //   transform: [
-          //     {
-          //       scale: interpolations[index].scale,
-          //     },
-          //   ],
-          // };
+          const scaleStyle = {
+            transform: [
+              {
+                scale: interpolations[index].scale,
+              },
+              // {
+              //   scale: 1.5,
+              // },
+            ],
+          };
           return (
             <MapView.Marker
               key={index}
@@ -226,7 +192,7 @@ const ExploreScreen = () => {
               <Animated.View style={[styles.markerWrap]}>
                 <Animated.Image
                   source={images.mapMarker}
-                  // style={[styles.marker, scaleStyle]}
+                  style={[styles.marker, scaleStyle]}
                   style={[styles.marker]}
                   resizeMode="cover"
                 />
@@ -234,6 +200,11 @@ const ExploreScreen = () => {
             </MapView.Marker>
           );
         })}
+        <MapView.Marker 
+          coordinate={{latitude: location?.coords.latitude, longitude: location?.coords.longitude, }}
+          key={"location-me"}
+          pinColor='red'
+        />
       </MapView>
       <View style={styles.searchBox}>
         <TextInput

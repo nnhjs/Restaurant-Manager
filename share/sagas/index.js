@@ -22,7 +22,7 @@ import {
   getRestaurants,
 } from "../../modules/entities/restaurant/restaurant.saga";
 import { UserTypes } from "../../modules/entities/user/user.reducer";
-import { createUsers } from "../../modules/entities/user/user.saga";
+import { createUsers, updateUser } from "../../modules/entities/user/user.saga";
 /* ------------- Types ------------- */
 // import { NewsTypes } from '../../modules/entities/news/news.reducer' -- data maaux
 import { LoginTypes } from "../../modules/login/login.reducer";
@@ -46,7 +46,7 @@ export default function* root() {
     // some sagas only receive an action
     takeLatest(LoginTypes.LOGIN_REQUEST, login, api),
     takeLatest(UserTypes.USER_CREATE_REQUEST, createUsers, api),
-
+    takeLatest(UserTypes.USER_UPDATE_REQUEST, updateUser, api),
     takeLatest(NotificationTypes.NOTIFICATION_REQUEST, getNotification, api),
     takeLatest(
       NotificationTypes.NOTIFICATION_ALL_REQUEST,

@@ -1,28 +1,25 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect } from "react";
 import {
-  View,
-  Text,
   Animated,
-  TouchableHighlight,
-  TouchableOpacity,
   StatusBar,
-} from 'react-native';
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useDispatch, useSelector } from "react-redux";
+import NotificationTypes from "../../modules/entities/notification/notification.reducer";
+import styles from "./NotificationScreen.styles";
 
-import {SwipeListView} from 'react-native-swipe-list-view';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import styles from './NotificationScreen.styles'
-
-import NotificationTypes from '../../modules/entities/notification/notification.reducer'
-
-const NotificationScreen = ({navigation}) => {
-  const dispatch = useDispatch()
-  const { notifications } = useSelector(state => state.notifications)
+const NotificationScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { notifications } = useSelector((state) => state.notifications);
   const listData = notifications?.map((NotificationItem, index) => ({
     key: `${index}`,
     title: NotificationItem.title,
     details: NotificationItem.details,
+    url: NotificationItem.url,
   }));
 
   const closeRow = (rowMap, rowKey) => {
@@ -33,33 +30,30 @@ const NotificationScreen = ({navigation}) => {
 
   const deleteRow = (rowMap, rowKey) => {
     closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex(item => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+    alert("Delete Row");
   };
 
-  const onRowDidOpen = rowKey => {
-    console.log('This row opened', rowKey);
+  const onRowDidOpen = (rowKey) => {
+    console.log("This row opened", rowKey);
   };
 
-  const onLeftActionStatusChange = rowKey => {
-    console.log('onLeftActionStatusChange', rowKey);
+  const onLeftActionStatusChange = (rowKey) => {
+    console.log("onLeftActionStatusChange", rowKey);
   };
 
-  const onRightActionStatusChange = rowKey => {
-    console.log('onRightActionStatusChange', rowKey);
+  const onRightActionStatusChange = (rowKey) => {
+    console.log("onRightActionStatusChange", rowKey);
   };
 
-  const onRightAction = rowKey => {
-    console.log('onRightAction', rowKey);
+  const onRightAction = (rowKey) => {
+    console.log("onRightAction", rowKey);
   };
 
-  const onLeftAction = rowKey => {
-    console.log('onLeftAction', rowKey);
+  const onLeftAction = (rowKey) => {
+    console.log("onLeftAction", rowKey);
   };
 
-  const VisibleItem = props => {
+  const VisibleItem = (props) => {
     const {
       data,
       rowHeightAnimatedValue,
@@ -80,11 +74,17 @@ const NotificationScreen = ({navigation}) => {
 
     return (
       <Animated.View
-        style={[styles.rowFront, {height: rowHeightAnimatedValue}]}>
-        <TouchableHighlight
+        style={[styles.rowFront, { height: rowHeightAnimatedValue }]}
+      >
+        <TouchableOpacity
           style={styles.rowFrontVisible}
-          onPress={() => console.log('Element touched')}
-          underlayColor={'#aaa'}>
+          onPress={() => {
+            navigation.navigate("Chi tiết thông báo", {
+              item: data.item,
+            });
+          }}
+          underlayColor={"#aaa"}
+        >
           <View>
             <Text style={styles.title} numberOfLines={1}>
               {data.item.title}
@@ -93,7 +93,7 @@ const NotificationScreen = ({navigation}) => {
               {data.item.details}
             </Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Animated.View>
     );
   };
@@ -111,10 +111,10 @@ const NotificationScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    dispatch(NotificationTypes.notificationAllRequest())
-  }, [])
+    dispatch(NotificationTypes.notificationAllRequest());
+  }, []);
 
-  const HiddenItemWithActions = props => {
+  const HiddenItemWithActions = (props) => {
     const {
       swipeAnimatedValue,
       leftActionActivated,
@@ -128,22 +128,25 @@ const NotificationScreen = ({navigation}) => {
     if (rightActionActivated) {
       Animated.spring(rowActionAnimatedValue, {
         toValue: 500,
-        useNativeDriver: false
+        useNativeDriver: false,
       }).start();
     } else {
       Animated.spring(rowActionAnimatedValue, {
         toValue: 75,
-        useNativeDriver: false
+        useNativeDriver: false,
       }).start();
     }
 
     return (
-      <Animated.View style={[styles.rowBack, {height: rowHeightAnimatedValue}]}>
+      <Animated.View
+        style={[styles.rowBack, { height: rowHeightAnimatedValue }]}
+      >
         <Text>Left</Text>
         {!leftActionActivated && (
           <TouchableOpacity
             style={[styles.backRightBtn, styles.backRightBtnLeft]}
-            onPress={onClose}>
+            onPress={onClose}
+          >
             <MaterialCommunityIcons
               name="close-circle-outline"
               size={25}
@@ -161,10 +164,12 @@ const NotificationScreen = ({navigation}) => {
                 flex: 1,
                 width: rowActionAnimatedValue,
               },
-            ]}>
+            ]}
+          >
             <TouchableOpacity
               style={[styles.backRightBtn, styles.backRightBtnRight]}
-              onPress={onDelete}>
+              onPress={onDelete}
+            >
               <Animated.View
                 style={[
                   styles.trash,
@@ -174,12 +179,13 @@ const NotificationScreen = ({navigation}) => {
                         scale: swipeAnimatedValue.interpolate({
                           inputRange: [-90, -45],
                           outputRange: [1, 0],
-                          extrapolate: 'clamp',
+                          extrapolate: "clamp",
                         }),
                       },
                     ],
                   },
-                ]}>
+                ]}
+              >
                 <MaterialCommunityIcons
                   name="trash-can-outline"
                   size={25}
@@ -211,7 +217,7 @@ const NotificationScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content"/>
+      <StatusBar barStyle="dark-content" />
       {/* <StatusBar backgroundColor="#FF6347" barStyle="light-content"/> */}
       <SwipeListView
         data={listData}

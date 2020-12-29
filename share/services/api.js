@@ -48,7 +48,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
 
   const getAccount = () => api.get("api/account");
   const createUser = (options) => api.post("api/users", options);
-  const updateAccount = (account) => api.post("api/account", account);
+  const updateUser = (id, account) => api.put("api/users/" + id , account);
   const changePassword = (currentPassword, newPassword) =>
     api.post(
       "api/account/change-password",
@@ -147,7 +147,7 @@ const create = (baseURL = AppConfig.apiUrl) => {
     createUser,
     forgotPassword,
     getAccount,
-    updateAccount,
+    updateUser,
     changePassword,
   };
 };

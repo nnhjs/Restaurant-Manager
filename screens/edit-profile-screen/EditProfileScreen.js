@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import {useTheme} from 'react-native-paper';
-
+import { useSelector, useDispatch } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -20,11 +20,18 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import styles from './EditProfileScreen.styles'
 
+import UserActions from '../../modules/entities/user/user.reducer'
+
 const EditProfileScreen = () => {
-
-  const [image, setImage] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+  const dispatch = useDispatch()
+  const bs = useRef()
+  const { account } = useSelector(state => state.login)
   const {colors} = useTheme();
-
+  const [name, setName] = useState(account?.name || "");
+  const [age, setAge] = useState(account?.age || "");
+  const [phone, setPhone] = useState(account?.phone || "");
+  const [gmail, setGmail] = useState(account?.gmail || "");
+  const [address, setAddress] = useState(account?.address || "");
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
       compressImageMaxWidth: 300,
@@ -32,9 +39,8 @@ const EditProfileScreen = () => {
       cropping: true,
       compressImageQuality: 0.7
     }).then(image => {
-      console.log(image);
       setImage(image.path);
-      this.bs.current.snapTo(1);
+      bs.current.snapTo(1);
     });
   }
 
@@ -45,13 +51,12 @@ const EditProfileScreen = () => {
       cropping: true,
       compressImageQuality: 0.7
     }).then(image => {
-      console.log(image);
       setImage(image.path);
-      this.bs.current.snapTo(1);
+      bs.current.snapTo(1);
     });
   }
 
-  renderInner = () => (
+  const renderInner = () => (
     <View style={styles.panel}>
       <View style={{alignItems: 'center'}}>
         <Text style={styles.panelTitle}>Upload Photo</Text>
@@ -65,13 +70,14 @@ const EditProfileScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.panelButton}
-        onPress={() => this.bs.current.snapTo(1)}>
+        onPress={() => bs.current.snapTo(1)}
+        >
         <Text style={styles.panelButtonTitle}>Cancel</Text>
       </TouchableOpacity>
     </View>
   );
 
-  renderHeader = () => (
+  const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
@@ -79,25 +85,28 @@ const EditProfileScreen = () => {
     </View>
   );
 
-  bs = React.createRef();
-  fall = new Animated.Value(1);
+  const fall = new Animated.Value(1);
 
   return (
     <View style={styles.container}>
       <BottomSheet
-        ref={this.bs}
+        ref={bs}
         snapPoints={[330, 0]}
-        renderContent={this.renderInner}
-        renderHeader={this.renderHeader}
+        renderContent={renderInner}
+        renderHeader={renderHeader}
         initialSnap={1}
-        callbackNode={this.fall}
+        callbackNode={fall}
         enabledGestureInteraction={true}
       />
       <Animated.View style={{margin: 20,
-        opacity: Animated.add(0.1, Animated.multiply(this.fall, 1.0)),
+        opacity: Animated.add(0.1, 
+          Animated.multiply(fall, 1.0)
+          ),
     }}>
         <View style={{alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => this.bs.current.snapTo(0)}>
+          <TouchableOpacity 
+            onPress={() => bs.current.snapTo(0)}
+          >
             <View
               style={{
                 height: 100,
@@ -108,7 +117,7 @@ const EditProfileScreen = () => {
               }}>
               <ImageBackground
                 source={{
-                  uri: image,
+                  uri: account?.img_url,
                 }}
                 style={{height: 100, width: 100}}
                 imageStyle={{borderRadius: 15}}>
@@ -136,14 +145,14 @@ const EditProfileScreen = () => {
             </View>
           </TouchableOpacity>
           <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>
-            John Doe
+            {account?.name}
           </Text>
         </View>
 
         <View style={styles.action}>
           <FontAwesome name="user-o" color={colors.text} size={20} />
           <TextInput
-            placeholder="First Name"
+            placeholder="Full Name"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -152,12 +161,16 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
+            onChangeText={(text) => {
+              setName(text)
+            }}
+            value={name}
           />
         </View>
         <View style={styles.action}>
           <FontAwesome name="user-o" color={colors.text} size={20} />
           <TextInput
-            placeholder="Last Name"
+            placeholder="Age"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -166,6 +179,10 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
+            onChangeText={(text) => {
+              setAge(parseInt(text))
+            }}
+            value={`${age}`}
           />
         </View>
         <View style={styles.action}>
@@ -181,12 +198,16 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
+            onChangeText={(text) => {
+              setPhone(text)
+            }}
+            value={phone}
           />
         </View>
         <View style={styles.action}>
           <FontAwesome name="envelope-o" color={colors.text} size={20} />
           <TextInput
-            placeholder="Email"
+            placeholder="Gmail"
             placeholderTextColor="#666666"
             keyboardType="email-address"
             autoCorrect={false}
@@ -196,12 +217,16 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
+            onChangeText={(text) => {
+              setGmail(text)
+            }}
+            value={gmail}
           />
         </View>
         <View style={styles.action}>
           <FontAwesome name="globe" color={colors.text} size={20} />
           <TextInput
-            placeholder="Country"
+            placeholder="Address"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -210,23 +235,21 @@ const EditProfileScreen = () => {
                 color: colors.text,
               },
             ]}
+            onChangeText={(text) => {
+              setAddress(text)
+            }}
+            value={address}
           />
         </View>
-        <View style={styles.action}>
-          <Icon name="map-marker-outline" color={colors.text} size={20} />
-          <TextInput
-            placeholder="City"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.commandButton} onPress={() => {
+          dispatch(UserActions.userUpdateRequest(account._id, {
+            name, 
+            age,
+            phone,
+            gmail,
+            address,
+          }))
+        }}>
           <Text style={styles.panelButtonTitle}>Submit</Text>
         </TouchableOpacity>
       </Animated.View>

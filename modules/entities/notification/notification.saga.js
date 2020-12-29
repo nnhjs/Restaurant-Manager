@@ -10,7 +10,6 @@ export function* getNotification(api, action) {
 
   // success?
   if (response.ok) {
-    console.log(response)
     yield put(NotificationActions.notificationSuccess(response.data))
   } else {
     yield put(NotificationActions.notificationFailure(response.data))

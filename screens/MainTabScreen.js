@@ -18,10 +18,10 @@ import FoodItemDetails from "./food-item-details/FoodItemDetail";
 import HomeScreen from "./home-screen/HomeScreen";
 import HotelItemScreen from "./hotel-item-details/HotelItemDetails";
 import HotelListScreen from "./hotels-screen/HotelListScreen";
+import NotificationItemDetailsScreen from "./notification-item-details/NotificationItemDetails";
 import NotificationScreen from "./notification-screen/NotificationScreen";
 import OrderScreen from "./order-screen/OrderScreen";
 import ProfileScreen from "./profile-screen/ProfileScreen";
-
 const HomeStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -249,6 +249,17 @@ const NotificationStackScreen = ({ navigation }) => (
     <NotificationStack.Screen
       name="Thông báo"
       component={NotificationScreen}
+      options={{
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Icon.Button name="ios-menu" size={25} backgroundColor="#1f65ff" />
+          </TouchableOpacity>
+        ),
+      }}
+    />
+    <NotificationStack.Screen
+      name="Chi tiết thông báo"
+      component={NotificationItemDetailsScreen}
       options={{
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.openDrawer()}>

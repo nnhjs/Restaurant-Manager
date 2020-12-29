@@ -1,6 +1,8 @@
 import { call, put } from 'redux-saga/effects'
 import UserActions from './user.reducer'
 import { callApi } from '../../../share/sagas/call-api.saga'
+import Toast from 'react-native-toast-message'
+import LoginActions from "../../login/login.reducer";
 
 export function* getUser(api, action) {
   const { userId } = action
@@ -10,7 +12,6 @@ export function* getUser(api, action) {
 
   // success?
   if (response.ok) {
-    console.log(response)
     yield put(UserActions.userSuccess(response.data))
   } else {
     yield put(UserActions.userFailure(response.data))
@@ -33,7 +34,6 @@ export function* getUsers(api, action) {
 
 export function* createUsers(api, action) {
   const { options } = action
-  console.log('optiones', options);
   // make the call to the api
   const apiCall = call(api.createUser, options)
   const response = yield call(callApi, apiCall)
@@ -46,17 +46,22 @@ export function* createUsers(api, action) {
 }
 
 export function* updateUser(api, action) {
-  const { user } = action
+  const { id, user } = action
   // make the call to the api
-  const idIsNotNull = !!user.id
-  const apiCall = call(idIsNotNull ? api.updateUser : api.createUser, user)
+  const apiCall = call(api.updateUser, id, user)
   const response = yield call(callApi, apiCall)
-
   // success?
   if (response.ok) {
-    yield put(UserActions.userUpdateSuccess(response.data))
+    Toast.show({
+      text1: "Cập nhật tài khoản thành công 👋",
+    });
+    yield put(LoginActions.loginSuccess(response.data.data));
   } else {
-    yield put(UserActions.userUpdateFailure(response.data))
+    Toast.show({
+      type: "error",
+      text1: "Cập nhật tài khoản thất bại",
+    });
+    yield put(LoginActions.loginSuccess(response.data.data));
   }
 }
 
