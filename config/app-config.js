@@ -5,6 +5,6 @@ export default {
   // use 10.0.2.2 for Android to connect to host machine
   apiUrl:
     Platform.OS === "ios"
-      ? "http://192.168.1.15:3000/"
-      : "http://192.168.1.15:3000/",
+      ? "https://api-restaurant-n68hcmvk1.vercel.app/"
+      : "https://api-restaurant-n68hcmvk1.vercel.app/",
 };
